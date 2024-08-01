@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react'
-import { SidebarLinks } from '../lib/constants/navigation'
+import { UserSidebarLinks } from '../lib/constants/navigation'
 import { NavLink } from 'react-router-dom'
 // import other imports as needed
 
@@ -9,9 +9,10 @@ interface SidebarProps {
 }
 
 interface Link {
-  key: string
-  path: string
+  id: number
+  href: string
   icon: string
+  activeIcon: string
   label: string
 }
 
@@ -85,25 +86,24 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
       )}
       <aside
         ref={sidebar}
-        className={`fixed top-16 left-0 z-99 scrollbar-none flex h-[calc(100vh-4rem)] w-80 flex-col overflow-y-hidden bg-primary px-2 duration-300 border-2 border-l-border_color ease-linear lg:static lg:translate-x-0 ${
+        className={`fixed top-16 left-0 z-99 scrollbar-none flex h-[calc(100vh-4rem)] w-72 flex-col overflow-y-hidden bg-primary px-5 duration-300 border-r-2 border-border_color ease-linear lg:static lg:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         <div className="flex flex-col flex-1 overflow-y-auto duration-300 ease-linear">
           {/* Sidebar Menu */}
-          <nav className="px-4 py-6 mt-5 border-b border-dashed lg:mt-5 lg:pb-10 lg:px-6 border-black_color">
+          <nav className="px-4 py-6 mt-5 lg:mt-5 lg:pb-10 lg:px-6">
             {/* Menu Group */}
             <div>
-              {/* <ul className="flex flex-col gap-2 mb-6">
-                {content.map((link,index) => (
-                  <div
-                    key={link.index}
+              <ul className="flex flex-col gap-10 mb-6">
+                {UserSidebarLinks.map((link) => (
+                  <SidebarLinks
+                    key={link.id}
                     link={link}
                     onClick={() => setSidebarOpen(false)}
                   />
                 ))}
-                
-              </ul> */}
+              </ul>
             </div>
           </nav>
 
@@ -111,6 +111,38 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
         </div>
       </aside>
     </div>
+  )
+}
+
+interface SidebarLinksProps {
+  link: Link
+  onClick: () => void
+}
+
+const SidebarLinks: React.FC<SidebarLinksProps> = ({ link, onClick }) => {
+  return (
+    <li>
+      <NavLink
+        onClick={onClick}
+        to={link.href}
+        className={({ isActive }) =>
+          isActive
+            ? 'group relative flex items-center gap-2.5 font-semibold rounded-sm py-2 text-secondary duration-300 ease-in-out'
+            : 'group relative flex items-center gap-2.5 font-semibold rounded-sm py-2 text-dark_color duration-300 ease-in-out'
+        }
+      >
+        {({ isActive }) => (
+          <>
+            <img
+              src={isActive ? link.activeIcon : link.icon}
+              className="w-6 h-6"
+              alt={link.label}
+            />
+            {link.label}
+          </>
+        )}
+      </NavLink>
+    </li>
   )
 }
 
