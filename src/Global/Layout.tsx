@@ -20,7 +20,7 @@ const Layout: React.FC = () => {
       <div className="flex w-full pt-16">
         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         <main className="relative flex-1 h-screen overflow-x-hidden overflow-y-auto bg-primary">
-          <div className="relative px-4 pt-8 pb-12 mx-auto max-w-screen-2xl shadow-2 md:px-6 2xl:px-11 lg:pt-16 ">
+          <div className="relative px-4 pt-8 pb-24 mx-auto max-w-screen-2xl shadow-2 md:px-6 2xl:px-11 lg:pt-16 ">
             <Outlet />
           </div>
         </main>

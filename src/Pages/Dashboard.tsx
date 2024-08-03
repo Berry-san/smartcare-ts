@@ -2,6 +2,9 @@ import Greeting from '../Components/Greeting'
 import profile from '../assets/images/smartcare.jpeg'
 import users from '../assets/dashboardUser.svg'
 import { Link } from 'react-router-dom'
+import Modal from 'Components/Modal'
+import { useState } from 'react'
+
 const DashboardItems = [
   { id: 1, totalUsers: 'Total users', randomNumber: 400 },
   { id: 2, totalUsers: 'Bob', randomNumber: 70 },
@@ -9,6 +12,7 @@ const DashboardItems = [
   { id: 4, totalUsers: 'David', randomNumber: 40 },
 ]
 const Dashboard = () => {
+  const [showModal, setShowModal] = useState(false)
   return (
     <div>
       <h1>
@@ -29,9 +33,9 @@ const Dashboard = () => {
           </div>
         ))}
       </section>
-      <section className="grid grid-cols-2 gap-5">
+      <section className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         {/* Comments */}
-        <div className="">
+        <div className="order-2 lg:order-1">
           <div className="flex justify-between text-lg font-medium">
             <p className="text-secondary">Recent comments</p>
             <Link to="/comments" className="underline">
@@ -70,16 +74,22 @@ const Dashboard = () => {
           </div>
         </div>
         {/* Create Video  */}
-        <div className="px-4 py-8 border rounded-lg border-border_color bg-gray/15 h-44">
-          <h2 className="text-lg font-semibold">Content Creator</h2>
+        <div className="order-1 px-4 py-8 border rounded-lg border-border_color bg-gray/15 h-44 lg:order-2">
+          <h2 className="text-lg font-medium">Content Creator:</h2>
           <div className="grid grid-cols-2 gap-5 mt-2 text-white">
-            <button className="py-4 rounded bg-secondary">
+            <button
+              className="py-4 rounded bg-secondary"
+              onClick={() => setShowModal(true)}
+            >
               Upload a Video
             </button>
             <button className="py-4 rounded bg-secondary">Create Video</button>
           </div>
         </div>
       </section>
+      <Modal isVisible={showModal} onClose={() => setShowModal(false)}>
+        <div>Hello</div>
+      </Modal>
     </div>
   )
 }

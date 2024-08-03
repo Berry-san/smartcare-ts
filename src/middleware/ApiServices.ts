@@ -1,0 +1,159 @@
+import axios from 'axios'
+import { z } from 'zod'
+
+// Define Zod schemas for request and response validation
+const categorySchema = z.object({
+  categoryId: z.string(),
+  categoryName: z.string(),
+})
+
+const categoriesSchema = z.array(categorySchema)
+
+const videoSchema = z.object({
+  videoId: z.string(),
+  categoryId: z.string(),
+  youtubeUrl: z.string(),
+  title: z.string(),
+  description: z.string(),
+})
+
+const videosSchema = z.array(videoSchema)
+
+const articleSchema = z.object({
+  id: z.number(),
+  title: z.string(),
+  description: z.string(),
+  imageUrl: z.string(),
+})
+
+const articlesSchema = z.array(articleSchema)
+
+// API service
+const apiClient = axios.create({
+  baseURL: 'https://api.sunsmartcare.com/v1/api',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+})
+
+export const apiService = {
+  // Categories
+  listCategories: async () => {
+    const response = await apiClient.get('/list_category')
+    return categoriesSchema.parse(response.data)
+  },
+
+  createCategory: async (data: { categoryName: string }) => {
+    const response = await apiClient.post('/create_video_category', data)
+    return categorySchema.parse(response.data)
+  },
+
+  updateCategory: async (data: {
+    categoryId: string
+    categoryName: string
+  }) => {
+    const response = await apiClient.post('/update_category', data)
+    return categorySchema.parse(response.data)
+  },
+
+  deleteCategory: async (categoryId: string) => {
+    const response = await apiClient.delete(
+      `/delete_category?categoryId=${categoryId}`
+    )
+    return response.data
+  },
+
+  // Videos
+  listVideos: async () => {
+    const response = await apiClient.get('/list_videos')
+    return videosSchema.parse(response.data)
+  },
+
+  createVideo: async (data: { title: string; youtubeUrl: string }) => {
+    const response = await apiClient.post('/create_video', data)
+    return videoSchema.parse(response.data)
+  },
+
+  updateVideo: async (data: {
+    videoId: string
+    categoryId: string
+    title: string
+    youtubeUrl: string
+    description: string
+  }) => {
+    const response = await apiClient.post('/update_video', data)
+    return videoSchema.parse(response.data)
+  },
+
+  deleteVideo: async (videoId: string) => {
+    const response = await apiClient.delete(`/delete_video?videoId=${videoId}`)
+    return response.data
+  },
+
+  getSingleVideo: async (videoId: string) => {
+    const response = await apiClient.get(`/single_video?videoId=${videoId}`)
+    return videoSchema.parse(response.data)
+  },
+
+  // Articles
+  listArticles: async () => {
+    const response = await apiClient.get('/list_articles')
+    return articlesSchema.parse(response.data)
+  },
+
+  createArticle: async (data: {
+    title: string
+    description: string
+    imageUrl: string
+  }) => {
+    const response = await apiClient.post('/create_article', data)
+    return articleSchema.parse(response.data)
+  },
+
+  updateArticle: async (data: {
+    id: number
+    title: string
+    description: string
+    imageUrl: string
+  }) => {
+    const response = await apiClient.post('/update_articles', data)
+    return articleSchema.parse(response.data)
+  },
+
+  deleteArticle: async (id: string) => {
+    const response = await apiClient.delete(`/delete_article/${id}`)
+    return response.data
+  },
+
+  // User Authentication
+  userSignUp: async (data: {
+    firstName: string
+    lastName: string
+    emailAddress: string
+    phoneNumber: number
+    password: string
+    confirmPassword: string
+  }) => {
+    const response = await apiClient.post('/user_sign_up', data)
+    return response.data
+  },
+
+  userLogin: async (data: { emailAddress: string; password: string }) => {
+    const response = await apiClient.post('/user_login', data)
+    return response.data
+  },
+
+  forgotPassword: async (data: { email: string }) => {
+    const response = await apiClient.post('/forgot_password', data)
+    return response.data
+  },
+
+  resetPassword: async (data: {
+    token: string
+    newPassword: string
+    confirmPassword: string
+  }) => {
+    const response = await apiClient.post('/reset_password', data)
+    return response.data
+  },
+}

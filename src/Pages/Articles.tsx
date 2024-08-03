@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Table from '../Components/Table'
 import Button from '../Components/Button'
+import { Link } from 'react-router-dom'
 
 const Articles = () => {
   const [search, setSearch] = useState('')
@@ -19,7 +20,7 @@ const Articles = () => {
   return (
     <div>
       <h2 className="text-2xl font-bold">Articles</h2>
-      <div className="mt-5 w-full flex items-center justify-between">
+      <div className="flex flex-col items-center justify-between w-full mt-5 space-y-3 md:flex-row md:space-y-0">
         <div className="w-full">
           <div className="flex flex-col space-y-3">
             <label htmlFor="">Search for an article</label>
@@ -27,7 +28,7 @@ const Articles = () => {
               <input
                 type="search"
                 name="search"
-                className="rounded w-full px-5 py-2 border-b border-secondary text-sm text-gray-500 focus-within:text-gray-500 bg-[#f4f4f4] focus:outline-none focus:bg-[#f4f4f4]"
+                className="rounded w-full md:1/2 lg:w-1/3 px-5 py-2 border-b border-secondary text-sm text-gray-500 focus-within:text-gray-500 bg-[#f4f4f4] focus:outline-none focus:bg-[#f4f4f4]"
                 autoComplete="off"
                 placeholder="Search..."
                 value={search}
@@ -36,9 +37,9 @@ const Articles = () => {
             </div>
           </div>
         </div>
-        <div>
+        <Link to="/write-article">
           <Button text={'Write an article'} />
-        </div>
+        </Link>
       </div>
       <div className="mt-10">
         <Table />

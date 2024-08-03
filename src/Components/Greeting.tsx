@@ -9,7 +9,7 @@ const getGreeting = (): string => {
   } else if (hours >= 12 && hours < 18) {
     return 'Good Afternoon'
   } else {
-    return 'Good Evening,'
+    return 'Good Evening'
   }
 }
 
@@ -24,7 +24,7 @@ const Greeting: React.FC = () => {
     return () => clearInterval(interval)
   }, [])
 
-  return <h1 className="text-lg font-bold">{greeting}, Bob</h1>
+  return <h1 className="font-mono text-lg font-medium">{greeting}, Admin</h1>
 }
 
 export default Greeting

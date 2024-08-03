@@ -34,7 +34,7 @@ const Users = () => {
       </div>
 
       {/* User Cards */}
-      <div className="mt-10 grid grid-cols-4 gap-10">
+      <div className="grid grid-cols-1 gap-10 mt-10 md:grid-cols-2 lg:grid-cols-4">
         <UserCard name="Ayo Maff" date="22/09/2000" />
         <UserCard name="Ayo Maff" date="22/09/2000" />
         <UserCard name="Ayo Maff" date="22/09/2000" />

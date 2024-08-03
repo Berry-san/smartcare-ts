@@ -23,15 +23,15 @@ const Videos: React.FC = () => {
   return (
     <>
       <h2 className="text-2xl font-bold">Videos</h2>
-      <div className="flex items-center justify-between w-full mt-5">
+      <div className="flex flex-col items-center justify-between w-full mt-5 space-y-3 md:flex-row md:space-y-0">
         <div className="w-full">
           <div className="flex flex-col space-y-3">
             <label htmlFor="">Search for a video</label>
-            <div className="w-full">
+            <div className="">
               <input
                 type="search"
                 name="search"
-                className="rounded w-1/3 px-5 py-2 border-b border-secondary text-sm text-gray-500 focus-within:text-gray-500 bg-[#f4f4f4] focus:outline-none focus:bg-[#f4f4f4]"
+                className="rounded w-full md:1/3 lg:w-1/3 px-5 py-2 border-b border-secondary text-sm text-gray-500 focus-within:text-gray-500 bg-[#f4f4f4] focus:outline-none focus:bg-[#f4f4f4]"
                 autoComplete="off"
                 placeholder="Search..."
                 value={search}
@@ -45,14 +45,14 @@ const Videos: React.FC = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-5 mt-10 sm:grid-cols-2 md:grid-cols-3">
-        <section className="col-span-2">
-          <div className="grid grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 mt-10 md:grid-cols-2 lg:grid-cols-3">
+        <section className="order-2 col-span-1 lg:col-span-2 md:order-1">
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
             <VideoThumbnail url={videoUrl} />
             <VideoThumbnail url={videoUrl} />
           </div>
         </section>
-        <section className="col-span-1 ">
+        <section className="order-1 col-span-1 md:order-2">
           <div className="bg-white rounded-xl">
             <div className="flex items-center justify-between p-5 border-b border-b-gray">
               <p className="">Video Categories</p>

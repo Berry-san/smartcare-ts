@@ -22,7 +22,7 @@ const VideoThumbnail: React.FC<{ url: string }> = ({ url }) => {
           href={`https://www.youtube.com/watch?v=${videoId}`}
           target="_blank"
           rel="noopener noreferrer"
-          className=""
+          className="w-full"
         >
           <div className="border shadow-lg rounded-xl border-slate-200">
             <section className="relative inline-block w-full ">
