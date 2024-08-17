@@ -9,7 +9,6 @@ import AllComments from './Pages/AllComments'
 import Articles from './Pages/Articles'
 import WriteArticle from './Pages/WriteArticle'
 import Login from 'Pages/Auth/Login'
-import Logout from 'Pages/Auth/Logout'
 import SignUp from 'Pages/Auth/SignUp'
 import ResetPassword from 'Pages/Auth/ResetPassword'
 import ForgotPassword from 'Pages/Auth/ForgotPassword'
@@ -24,8 +23,8 @@ function App() {
         element={isAuthenticated ? <Navigate replace to="/" /> : <Login />}
       />
       <Route path="/signUp" element={<SignUp />} />
+      <Route path="/forgotPassword" element={<ForgotPassword />} />
       <Route path="/resetPassword" element={<ResetPassword />} />
-      <Route path="/forgotPassword/:token" element={<ForgotPassword />} />
       <Route path="/" element={<Layout />}>
         <Route index element={<Dashboard />} />
         <Route path="users" element={<Users />} />

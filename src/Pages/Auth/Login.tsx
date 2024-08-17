@@ -1,22 +1,18 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { useState } from 'react'
-import qs from 'qs'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useFormik } from 'formik'
-import * as Yup from 'yup'
-import { useDispatch } from 'react-redux'
-import { login } from 'Redux/features/authSlice'
-import axios from 'axios'
-
+import useAuthStore from 'Store/authStore'
+import { apiService } from 'middleware/ApiServices'
 interface LoginValues {
-  email: string
+  emailAddress: string
   password: string
 }
 
 const Login: React.FC = () => {
   const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const { login } = useAuthStore()
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -28,58 +24,45 @@ const Login: React.FC = () => {
 
   const loginValue = useFormik<LoginValues>({
     initialValues: {
-      email: '',
+      emailAddress: '',
       password: '',
     },
-    validationSchema: Yup.object({
-      email: Yup.string().email('Invalid email address').required('Required'),
-      password: Yup.string()
-        .min(8, 'Password must be 8 characters long')
-        .matches(/[0-9]/, 'Password requires a number')
-        .matches(/[a-z]/, 'Password requires a lowercase letter')
-        .matches(/[A-Z]/, 'Password requires an uppercase letter')
-        .matches(/[^\w]/, 'Password requires a symbol')
-        .required('Required'),
-    }),
+    // validationSchema: Yup.object({
+    //   email: Yup.string().email('Invalid email address').required('Required'),
+    //   password: Yup.string()
+    //     .min(8, 'Password must be 8 characters long')
+    //     .matches(/[0-9]/, 'Password requires a number')
+    //     .matches(/[a-z]/, 'Password requires a lowercase letter')
+    //     .matches(/[A-Z]/, 'Password requires an uppercase letter')
+    //     .matches(/[^\w]/, 'Password requires a symbol')
+    //     .required('Required'),
+    // }),
     onSubmit: async () => {
       setLoading(true)
       setError(null)
 
-      const config = {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'x-api-key': '987654',
-        },
-      }
-
       try {
-        const response = await axios.post(
-          'user_login',
-          qs.stringify(loginValue.values),
-          config
-        )
+        const response = await apiService.userLogin(loginValue.values)
 
-        if (response.data['status_code'] === '0') {
-          const loginUser = response.data.user_details[0]
-          const { email, user_name, user_type_id, ref_id } = loginUser
+        if (response.statusCode === '200') {
+          const loginUser = response.result
+          const { emailAddress, firstName, lastName, userId } = loginUser
 
-          //   dispatch(
-          //     login({
-          //       email,
-          //       user_name,
-          //       isAuthenticated: +response.data.status_code === 0,
-          //       role: user_type_id,
-          //       create_by: ref_id,
-          //       ref_id,
-          //     })
-          //   )
-          toast.success(response.data.message)
-          navigate('/layout')
+          login({
+            emailAddress,
+            firstName,
+            lastName,
+            isAuthenticated: +response.statusCode === 200,
+            userId,
+          })
+          toast.success(response.message)
+          navigate('/')
         } else {
-          toast.error(response.data.message)
+          toast.error(response.message)
         }
         setLoading(false)
       } catch (error: any) {
+        console.log(error)
         toast.error(error.message)
         setError(error.message)
         setLoading(false)
@@ -94,12 +77,12 @@ const Login: React.FC = () => {
       ) : (
         <div className="bg-[#fff] text-dark_color border border-dull_white max-w-xl mx-auto rounded-md">
           <div className="px-10 py-6">
-            <div className="flex items-center justify-between mb-5 ">
+            <div className="flex flex-col items-center justify-between mb-5">
               <h4 className="text-sm font-semibold">Login</h4>
             </div>
             <div>
               <form onSubmit={loginValue.handleSubmit}>
-                <div className="grid grid-cols-1 text-left md:grid-cols-2 gap-x-5 gap-y-5 ">
+                <div className="flex flex-col text-left gap-x-5 gap-y-5 ">
                   <div>
                     <label htmlFor="email" className="text-xs font-semibold">
                       Email Address:
@@ -107,15 +90,16 @@ const Login: React.FC = () => {
                     <input
                       type="email"
                       className="w-full bg-[#f4f4f4] px-5 py-3 focus:outline-none rounded-md"
-                      id="email"
-                      name="email"
-                      value={loginValue.values.email}
+                      id="emailAddress"
+                      name="emailAddress"
+                      value={loginValue.values.emailAddress}
                       onChange={loginValue.handleChange}
                       onBlur={loginValue.handleBlur}
                     />
-                    {loginValue.touched.email && loginValue.errors.email ? (
+                    {loginValue.touched.emailAddress &&
+                    loginValue.errors.emailAddress ? (
                       <p className="mt-1 text-xs font-medium text-red-500">
-                        {loginValue.errors.email}
+                        {loginValue.errors.emailAddress}
                       </p>
                     ) : null}
                   </div>
@@ -185,17 +169,28 @@ const Login: React.FC = () => {
                     ) : null}
                   </div>
                 </div>
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col items-center w-full">
                   <button
-                    className="flex justify-end px-4 py-3 mt-5 text-xs font-semibold text-white bg-blue-700 rounded"
+                    className="flex items-center justify-center w-full px-4 py-3 mt-5 text-xs font-semibold text-center text-white rounded bg-secondary"
                     type="submit"
                     disabled={loading}
                   >
                     Login
                   </button>
-                  {/* <Link to="/token" className="mt-5 text-sm font-semibold">
+                  <div>
+                    <h2 className="mt-2 text-sm font-semibold text-gray-600 ">
+                      Don't have an account?{' '}
+                      <Link to="/signUp" className="underline text-secondary">
+                        Sign Up
+                      </Link>
+                    </h2>
+                  </div>
+                  <Link
+                    to="/forgotPassword"
+                    className="text-sm font-semibold underline"
+                  >
                     Forgot Password ?
-                  </Link> */}
+                  </Link>
                 </div>
               </form>
             </div>

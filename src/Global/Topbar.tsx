@@ -1,6 +1,6 @@
+import Logout from 'Pages/Auth/Logout'
 import hamburger from '../assets/hamburger.svg'
 import logout from '../assets/logout.svg'
-import React, { useRef, useEffect, useState } from 'react'
 
 interface TopbarProps {
   sidebarOpen: boolean
@@ -24,10 +24,7 @@ const Topbar: React.FC<TopbarProps> = ({ sidebarOpen, setSidebarOpen }) => {
           </button>
         </div>
 
-        <button className="flex items-center justify-end space-x-3 font-mono font-medium text-warning">
-          <p className="hidden md:flex">Sign Out</p>
-          <img src={logout} alt="" />
-        </button>
+        <Logout />
       </div>
     </header>
   )

@@ -24,7 +24,7 @@ const Greeting: React.FC = () => {
     return () => clearInterval(interval)
   }, [])
 
-  return <h1 className="font-mono text-lg font-medium">{greeting}, Admin</h1>
+  return <h2 className="font-mono text-lg font-medium">{greeting}, Admin</h2>
 }
 
 export default Greeting

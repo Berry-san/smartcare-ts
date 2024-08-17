@@ -4,6 +4,7 @@ import users from '../assets/dashboardUser.svg'
 import { Link } from 'react-router-dom'
 import Modal from 'Components/Modal'
 import { useState } from 'react'
+import useAuthStore from 'Store/authStore'
 
 const DashboardItems = [
   { id: 1, totalUsers: 'Total users', randomNumber: 400 },
@@ -12,15 +13,22 @@ const DashboardItems = [
   { id: 4, totalUsers: 'David', randomNumber: 40 },
 ]
 const Dashboard = () => {
+  const { user } = useAuthStore((state) => ({
+    user: state.user,
+  }))
+  console.log(user)
   const [showModal, setShowModal] = useState(false)
   return (
     <div>
-      <h1>
+      <span>
         <Greeting />
-      </h1>
+      </span>
       <section className="grid grid-cols-1 gap-5 my-5 md:grid-cols-2 lg:grid-cols-4">
-        {DashboardItems.map((item) => (
-          <div className="h-40 px-10 pt-10 font-mono border border-border_color rounded-xl bg-gray/15">
+        {DashboardItems.map((item, index) => (
+          <div
+            className="h-40 px-10 pt-10 font-mono border border-border_color rounded-xl bg-gray/15"
+            key={index}
+          >
             <div className="flex items-center justify-between">
               <div className="font-semibold text-blue">
                 <p className="text-3xl">{item.randomNumber} </p>

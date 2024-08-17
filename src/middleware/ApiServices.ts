@@ -33,6 +33,7 @@ const apiClient = axios.create({
   baseURL: 'https://api.sunsmartcare.com/v1/api',
   headers: {
     'Content-Type': 'application/json',
+    'x-api-key': '21122023',
   },
 })
 
@@ -126,25 +127,28 @@ export const apiService = {
   },
 
   // User Authentication
-  userSignUp: async (data: {
+  userSignUp: async (signUpValue: {
     firstName: string
     lastName: string
     emailAddress: string
-    phoneNumber: number
+    phoneNumber: string
     password: string
     confirmPassword: string
   }) => {
-    const response = await apiClient.post('/user_sign_up', data)
+    const response = await apiClient.post('/user_sign_up', signUpValue)
     return response.data
   },
 
-  userLogin: async (data: { emailAddress: string; password: string }) => {
-    const response = await apiClient.post('/user_login', data)
+  userLogin: async (loginValue: { emailAddress: string; password: string }) => {
+    const response = await apiClient.post('/user_login', loginValue)
     return response.data
   },
 
-  forgotPassword: async (data: { email: string }) => {
-    const response = await apiClient.post('/forgot_password', data)
+  forgotPassword: async (forgotPasswordValue: { emailAddress: string }) => {
+    const response = await apiClient.post(
+      '/forgot_password',
+      forgotPasswordValue
+    )
     return response.data
   },
 
