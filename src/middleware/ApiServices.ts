@@ -3,8 +3,8 @@ import { z } from 'zod'
 
 // Define Zod schemas for request and response validation
 const categorySchema = z.object({
-  categoryId: z.string(),
-  categoryName: z.string(),
+  category_id: z.string(),
+  category_name: z.string(),
 })
 
 const categoriesSchema = z.array(categorySchema)
@@ -23,7 +23,8 @@ const articleSchema = z.object({
   id: z.number(),
   title: z.string(),
   description: z.string(),
-  imageUrl: z.string(),
+  image_url: z.string(),
+  inserted_dt: z.string(),
 })
 
 const articlesSchema = z.array(articleSchema)
@@ -41,12 +42,13 @@ export const apiService = {
   // Categories
   listCategories: async () => {
     const response = await apiClient.get('/list_category')
-    return categoriesSchema.parse(response.data)
+    return categoriesSchema.parse(response.data.result)
   },
 
   createCategory: async (data: { categoryName: string }) => {
     const response = await apiClient.post('/create_video_category', data)
-    return categorySchema.parse(response.data)
+    // return categorySchema.parse(response.data)
+    return response.data
   },
 
   updateCategory: async (data: {
@@ -58,7 +60,7 @@ export const apiService = {
   },
 
   deleteCategory: async (categoryId: string) => {
-    const response = await apiClient.delete(
+    const response = await apiClient.get(
       `/delete_category?categoryId=${categoryId}`
     )
     return response.data
@@ -67,7 +69,7 @@ export const apiService = {
   // Videos
   listVideos: async () => {
     const response = await apiClient.get('/list_videos')
-    return videosSchema.parse(response.data)
+    return videosSchema.parse(response.data.result)
   },
 
   createVideo: async (data: { title: string; youtubeUrl: string }) => {
@@ -99,7 +101,8 @@ export const apiService = {
   // Articles
   listArticles: async () => {
     const response = await apiClient.get('/list_articles')
-    return articlesSchema.parse(response.data)
+    // return articlesSchema.parse(response.data)
+    return response.data.result
   },
 
   createArticle: async (data: {
@@ -108,7 +111,8 @@ export const apiService = {
     imageUrl: string
   }) => {
     const response = await apiClient.post('/create_article', data)
-    return articleSchema.parse(response.data)
+    // return articleSchema.parse(response.data.result)
+    return response.data.result
   },
 
   updateArticle: async (data: {

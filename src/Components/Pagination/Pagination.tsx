@@ -41,8 +41,8 @@ const Pagination: React.FC<PaginationProps> = (props) => {
       <button
         className={
           isFirstPage
-            ? 'bg-blue-800/50 rounded p-1 me-3'
-            : 'bg-blue-800 rounded p-1 me-3'
+            ? 'bg-secondary/50 rounded p-1 me-3'
+            : 'bg-secondary rounded p-1 me-3'
         }
         onClick={onPrevious}
         disabled={isFirstPage}
@@ -74,7 +74,7 @@ const Pagination: React.FC<PaginationProps> = (props) => {
             key={pageNumber as number}
             className={`border border-green ${
               pageNumber === currentPage
-                ? 'bg-blue-800 text-white'
+                ? 'bg-secondary text-white'
                 : 'text-green'
             } rounded px-3 py-1 me-3 font-bold text-sm`}
             onClick={() => onPageChange(pageNumber as number)}
@@ -85,7 +85,9 @@ const Pagination: React.FC<PaginationProps> = (props) => {
       })}
       <button
         className={
-          isLastPage ? 'bg-blue-800/50 rounded p-1' : 'bg-blue-800 rounded p-1'
+          isLastPage
+            ? 'bg-secondary/50 rounded p-1'
+            : 'bg-secondary rounded p-1'
         }
         onClick={onNext}
         disabled={isLastPage}

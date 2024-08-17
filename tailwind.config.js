@@ -14,7 +14,7 @@ module.exports = {
         transparent: 'transparent',
         white: '#FFFFFF',
         gray: '#C4C4C4',
-        blue: '#5750F9',
+        // blue: '#5750F9',
       },
       dropShadow: {
         1: '0px 1px 0px #E2E8F0',

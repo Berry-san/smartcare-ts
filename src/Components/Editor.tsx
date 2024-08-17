@@ -21,8 +21,33 @@ const Editor: React.FC<EditorProps> & { modules: any; formats: string[] } = ({
     onChange(html)
   }
 
+  const editorStyles: React.CSSProperties = {
+    height: '150px',
+    // marginBottom: '60px',
+  }
+
+  // Add media queries using a string template
+  const responsiveStyles = `
+    @media (max-width: 480px) { /* Phone */
+      .quill-editor {
+        margin-bottom: 110px;
+      }
+    }
+    @media (min-width: 481px) and (max-width: 768px) { /* Tablet */
+      .quill-editor {
+        margin-bottom: 90px;
+      }
+    }
+    @media (min-width: 769px) { /* PC */
+      .quill-editor {
+        margin-bottom: 60px;
+      }
+    }
+  `
+
   return (
     <div>
+      <style>{responsiveStyles}</style>
       <ReactQuill
         theme={theme}
         onChange={handleChange}
@@ -32,6 +57,8 @@ const Editor: React.FC<EditorProps> & { modules: any; formats: string[] } = ({
         formats={Editor.formats}
         bounds=".app"
         placeholder={placeholder}
+        style={editorStyles}
+        className="quill-editor"
       />
     </div>
   )

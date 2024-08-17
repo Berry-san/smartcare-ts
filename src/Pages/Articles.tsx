@@ -1,10 +1,28 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Table from '../Components/Table'
 import Button from '../Components/Button'
 import { Link } from 'react-router-dom'
+import { apiService } from 'middleware/ApiServices'
 
 const Articles = () => {
   const [search, setSearch] = useState('')
+  const [articles, setArticles] = useState<any[]>([])
+  const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const articles = await apiService.listArticles()
+        setArticles(articles)
+      } catch (error) {
+        setError('Failed to load categories')
+        console.error(error)
+      }
+    }
+
+    fetchCategories()
+  }, [])
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchValue = e.target.value.toLowerCase()
@@ -42,7 +60,7 @@ const Articles = () => {
         </Link>
       </div>
       <div className="mt-10">
-        <Table />
+        <Table data={articles} />
       </div>
     </div>
   )

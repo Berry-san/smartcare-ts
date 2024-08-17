@@ -38,7 +38,7 @@ const VideoThumbnail: React.FC<{ url: string }> = ({ url }) => {
 
             <section className="flex justify-between px-5 py-3">
               <div className="flex flex-col gap-0 ">
-                <h2 className="font-extrabold text-md">
+                <h2 className="font-semibold text-md">
                   Lorem ipsum dolor, sit amet consectetur
                 </h2>
                 <p className="text-gray">22/22/22</p>
