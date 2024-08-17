@@ -1,11 +1,21 @@
 import { useState } from 'react'
 import VideoThumbnail from '../Components/VideoThumbnail'
 import Button from '../Components/Button'
+import Modal from 'Components/Modal'
 import addButton from '../assets/add.svg'
 import deleteButton from '../assets/delete.svg'
 
 const Videos: React.FC = () => {
   const [search, setSearch] = useState('')
+  const [isModalVisible, setIsModalVisible] = useState(false)
+
+  const openModal = () => {
+    setIsModalVisible(true)
+  }
+
+  const closeModal = () => {
+    setIsModalVisible(false)
+  }
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchValue = e.target.value.toLowerCase()
@@ -41,7 +51,7 @@ const Videos: React.FC = () => {
           </div>
         </div>
         <div>
-          <Button text={'Upload a video'} />
+          <Button text={'Upload a video'} onClick={openModal} />
         </div>
       </div>
 
@@ -78,6 +88,11 @@ const Videos: React.FC = () => {
           <VideoThumbnail key={index} item={item} />
         ))} */}
       </div>
+      <Modal isVisible={isModalVisible} onClose={closeModal}>
+        <h3 className="text-xl font-bold">Upload Video</h3>
+        {/* Add your upload video form or content here */}
+        <p>This is where the upload form or instructions will go.</p>
+      </Modal>
     </>
   )
 }

@@ -1,6 +1,16 @@
-const Button: React.FC<{ text: string }> = ({ text }) => {
+import React from 'react'
+
+interface ButtonProps {
+  text: string
+  onClick?: () => void
+}
+
+const Button: React.FC<ButtonProps> = ({ text, onClick }) => {
   return (
-    <button className="py-5 w-60 rounded bg-secondary text-white">
+    <button
+      onClick={onClick}
+      className="py-5 text-white rounded w-60 bg-secondary"
+    >
       {text}
     </button>
   )

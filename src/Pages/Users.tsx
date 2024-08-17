@@ -1,18 +1,42 @@
 import { useState } from 'react'
 import UserCard from '../Components/User-Card'
+
 const Users = () => {
   const [search, setSearch] = useState('')
+
+  // Sample user data (replace this with your actual data)
+  const users = [
+    {
+      name: 'Ayo Maff',
+      date: '22/09/2000',
+      document_owner: 'Ayo Maff',
+      department: 'Engineering',
+    },
+    {
+      name: 'Jane Doe',
+      date: '15/07/1999',
+      document_owner: 'Jane Doe',
+      department: 'Marketing',
+    },
+    {
+      name: 'John Smith',
+      date: '30/11/1985',
+      document_owner: 'John Smith',
+      department: 'Sales',
+    },
+    // Add more users as needed
+  ]
+
+  // Filter the users based on the search input
+  const filteredUsers = users.filter(
+    (user) =>
+      user.document_owner.toLowerCase().includes(search) ||
+      user.name.toLowerCase().includes(search)
+  )
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchValue = e.target.value.toLowerCase()
     setSearch(searchValue)
-    // const filtered = sortedData.filter(
-    //   (item) =>
-    //     // item.firstName.toLowerCase().includes(searchValue) ||
-    //     item.document_owner.toLowerCase().includes(searchValue) ||
-    //     item.department.toLowerCase().includes(searchValue)
-    // )
-    // setFilteredData(filtered)
   }
 
   return (
@@ -35,14 +59,9 @@ const Users = () => {
 
       {/* User Cards */}
       <div className="grid grid-cols-1 gap-10 mt-10 md:grid-cols-2 lg:grid-cols-4">
-        <UserCard name="Ayo Maff" date="22/09/2000" />
-        <UserCard name="Ayo Maff" date="22/09/2000" />
-        <UserCard name="Ayo Maff" date="22/09/2000" />
-        <UserCard name="Ayo Maff" date="22/09/2000" />
-        <UserCard name="Ayo Maff" date="22/09/2000" />
-        <UserCard name="Ayo Maff" date="22/09/2000" />
-        <UserCard name="Ayo Maff" date="22/09/2000" />
-        <UserCard name="Ayo Maff" date="22/09/2000" />
+        {filteredUsers.map((user, index) => (
+          <UserCard key={index} name={user.name} date={user.date} />
+        ))}
       </div>
     </div>
   )

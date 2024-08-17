@@ -29,16 +29,16 @@ const VideoThumbnail: React.FC<{ url: string }> = ({ url }) => {
               <img
                 src={thumbnailUrl}
                 alt="YouTube Video Thumbnail"
-                className="object-cover w-full shadow-lg h-60 rounded-t-xl"
+                className="object-cover w-full h-48 shadow-lg rounded-t-xl"
               />
               <div className="absolute inset-0 flex items-center justify-center bg-black rounded-lg bg-opacity-40">
                 <img src={youtube} alt="Play" className="w-12 h-12" />
               </div>
             </section>
 
-            <section className="flex justify-between p-5">
-              <div className="flex flex-col gap-3">
-                <h2 className="text-lg font-extrabold">
+            <section className="flex justify-between px-5 py-3">
+              <div className="flex flex-col gap-0 ">
+                <h2 className="font-extrabold text-md">
                   Lorem ipsum dolor, sit amet consectetur
                 </h2>
                 <p className="text-gray">22/22/22</p>
