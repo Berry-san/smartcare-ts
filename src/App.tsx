@@ -1,6 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { RootState } from 'Redux/store'
 import Layout from './Global/Layout'
 import Dashboard from './Pages/Dashboard'
 import Users from './Pages/Users'
@@ -12,15 +11,21 @@ import Login from 'Pages/Auth/Login'
 import SignUp from 'Pages/Auth/SignUp'
 import ResetPassword from 'Pages/Auth/ResetPassword'
 import ForgotPassword from 'Pages/Auth/ForgotPassword'
+import useAuthStore from 'Store/authStore'
 
 function App() {
-  const { isAuthenticated } = useSelector((state: RootState) => state.auth)
+  // const { isAuthenticated } = useSelector((state: RootState) => state.auth)
+  const { user } = useAuthStore((state) => ({
+    user: state.user,
+  }))
+
+  const authChecker = user?.isAuthenticated
 
   return (
     <Routes>
       <Route
         path="/login"
-        element={isAuthenticated ? <Navigate replace to="/" /> : <Login />}
+        element={authChecker ? <Navigate replace to="/" /> : <Login />}
       />
       <Route path="/signUp" element={<SignUp />} />
       <Route path="/forgotPassword" element={<ForgotPassword />} />

@@ -30,16 +30,19 @@ const Editor: React.FC<EditorProps> & { modules: any; formats: string[] } = ({
   const responsiveStyles = `
     @media (max-width: 480px) { /* Phone */
       .quill-editor {
+        padding-bottom: 1rem;
         margin-bottom: 110px;
       }
     }
     @media (min-width: 481px) and (max-width: 768px) { /* Tablet */
       .quill-editor {
+      padding-bottom: 1.5rem;
         margin-bottom: 90px;
       }
     }
     @media (min-width: 769px) { /* PC */
       .quill-editor {
+              padding-bottom: 1rem;
         margin-bottom: 60px;
       }
     }

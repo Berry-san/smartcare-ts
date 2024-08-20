@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useRef } from 'react'
+import { useQuery, useMutation, useQueryClient } from 'react-query'
 import { apiService } from 'middleware/ApiServices'
 import VideoThumbnail from '../Components/VideoThumbnail'
 import Button from '../Components/Button'
@@ -8,73 +9,70 @@ import deleteButton from '../assets/delete.svg'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
-const Videos: React.FC = () => {
-  // const [search, setSearch] = useState('')
-  // const [showModal, setShowModal] = useState(false)
-  // const [videos, setVideos] = useState([])
-  // const [categories, setCategories] = useState<any[]>([])
-  // const [newCategory, setNewCategory] = useState('')
-  // const [error, setError] = useState<string | null>(null)
-  // const [loading, setLoading] = useState(false)
+interface Category {
+  category_id: string
+  category_name: string
+}
 
+interface Video {
+  id: string
+  title: string
+  // Add other properties here
+}
+
+const Videos: React.FC = () => {
   const [search, setSearch] = useState('')
-  const [showModal, setShowModal] = useState(false)
-  const [videos, setVideos] = useState([])
-  const [categories, setCategories] = useState<any[]>([])
-  const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [categoryToDelete, setCategoryToDelete] = useState<string | null>(null)
   const [newCategory, setNewCategory] = useState('')
   const [isAddingCategory, setIsAddingCategory] = useState(false)
-
   const inputRef = useRef<HTMLInputElement>(null)
+  const queryClient = useQueryClient()
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const categories = await apiService.listCategories()
-        setCategories(categories)
-      } catch (error) {
-        setError('Failed to load categories')
-        console.error(error)
-      }
+  const { data: categories = [], error: fetchError } = useQuery<Category[]>(
+    'categories',
+    apiService.listCategories
+  )
+
+  const deleteCategoryMutation = useMutation(
+    (categoryId: string) => apiService.deleteCategory(categoryId),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('categories')
+        toast.success('Category deleted successfully')
+        setShowDeleteModal(false)
+      },
+      onError: () => {
+        toast.error('Failed to delete category')
+      },
     }
+  )
 
-    fetchCategories()
-  }, [])
-
-  const handleDeleteCategory = async (categoryId: string) => {
-    try {
-      const response = await apiService.deleteCategory(categoryId)
-      setCategories(
-        categories.filter((category) => category.category_id !== categoryId)
-      )
-      toast.success(response.message)
-    } catch (err) {
-      setError('Failed to delete category')
+  const handleDeleteCategory = () => {
+    if (categoryToDelete) {
+      deleteCategoryMutation.mutate(categoryToDelete)
     }
   }
 
-  const handleAddCategory = async () => {
-    if (newCategory.trim() === '') return
-
-    try {
-      const createdCategory = await apiService.createCategory({
-        categoryName: newCategory,
-      })
-      console.log(newCategory)
-      // setCategories([...categories, { newCategory }])
-      setCategories((prevCategories) => [newCategory, ...prevCategories])
-
-      console.log(categories)
-      setNewCategory('')
-      setIsAddingCategory(false)
-
-      // Update categories state directly
-
-      toast.success('Category added successfully')
-    } catch (err) {
-      setError('Failed to create category')
+  const addCategoryMutation = useMutation(
+    (newCategory: string) =>
+      apiService.createCategory({ categoryName: newCategory }),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('categories')
+        setNewCategory('')
+        setIsAddingCategory(false)
+        toast.success('Category added successfully')
+      },
+      onError: () => {
+        toast.error('Failed to create category')
+      },
     }
+  )
+
+  const handleAddCategory = () => {
+    if (newCategory.trim() === '') return
+    addCategoryMutation.mutate(newCategory)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -90,18 +88,13 @@ const Videos: React.FC = () => {
     }
   }
 
-  const filteredUsers = videos.filter(
-    (video) =>
-      //  video.document_owner.toLowerCase().includes(search) ||
-      //  video.name.toLowerCase().includes(search)
-      video
-  )
-
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const searchValue = e.target.value.toLowerCase()
-    setSearch(searchValue)
+    setSearch(e.target.value)
   }
-  const videoUrl = 'https://www.youtube.com/watch?v=5SUqLHydmhg'
+
+  if (fetchError) {
+    return <div>Failed to load categories</div>
+  }
 
   return (
     <>
@@ -124,21 +117,21 @@ const Videos: React.FC = () => {
           </div>
         </div>
         <div>
-          <Button text={'Upload a video'} onClick={() => setShowModal(true)} />
+          {/* <Button text={'Upload a video'} onClick={() => setShowModal(true)} /> */}
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-5 mt-10 md:grid-cols-2 lg:grid-cols-3">
         <section className="order-2 col-span-1 lg:col-span-2 md:order-1">
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-            <VideoThumbnail url={videoUrl} />
-            <VideoThumbnail url={videoUrl} />
+            <VideoThumbnail url="https://www.youtube.com/watch?v=5SUqLHydmhg" />
+            <VideoThumbnail url="https://www.youtube.com/watch?v=5SUqLHydmhg" />
           </div>
         </section>
         <section className="order-1 col-span-1 md:order-2">
-          <div className="bg-white rounded-xl font-medium">
+          <div className="font-medium bg-white rounded-xl">
             <div className="flex items-center justify-between p-5 border-b border-b-gray">
-              <p className="">Video Categories</p>
+              <p>Video Categories</p>
               <button onClick={handleAddButtonClick}>
                 <img src={addButton} alt="Add Category" />
               </button>
@@ -146,7 +139,7 @@ const Videos: React.FC = () => {
             <div className="p-5">
               <ul className="space-y-5">
                 {isAddingCategory && (
-                  <li className="flex items-center justify-between relative">
+                  <li className="relative flex items-center justify-between">
                     <input
                       type="text"
                       value={newCategory}
@@ -154,7 +147,7 @@ const Videos: React.FC = () => {
                       onKeyDown={handleKeyDown}
                       ref={inputRef}
                       placeholder="Enter category name"
-                      className="w-full border-b border-secondary text-sm text-gray-500 focus:outline-none py-2"
+                      className="w-full py-2 text-sm text-gray-500 border-b border-secondary focus:outline-none"
                     />
                     <button
                       type="button"
@@ -165,18 +158,24 @@ const Videos: React.FC = () => {
                     </button>
                   </li>
                 )}
-                {categories.map((category, index) => (
-                  <li key={index} className="flex items-center justify-between">
+                {categories.map((category) => (
+                  <li
+                    key={category.category_id}
+                    className="flex items-center justify-between"
+                  >
                     <p>
                       {category.category_name}{' '}
                       <span className="text-gray">(32 Videos)</span>
                     </p>
                     <button
-                      onClick={() => handleDeleteCategory(category.category_id)}
+                      onClick={() => {
+                        setShowDeleteModal(true)
+                        setCategoryToDelete(category.category_id)
+                      }}
                     >
                       <img
                         src={deleteButton}
-                        alt=""
+                        alt="Delete Category"
                         className="hover:scale-125"
                       />
                     </button>
@@ -186,12 +185,37 @@ const Videos: React.FC = () => {
             </div>
           </div>
         </section>
-        {/* {filteredData.map((item, index) => (
-          <VideoThumbnail key={index} item={item} />
-        ))} */}
       </div>
-      <Modal isVisible={showModal} onClose={() => setShowModal(false)}>
-        <div>Hello</div>
+
+      <Modal
+        isVisible={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+      >
+        <section className="flex flex-col items-center justify-center space-y-5 text-center">
+          <div className="p-5 bg-red-100 rounded-full">
+            <img src={deleteButton} className="w-8 h-8" alt="" />
+          </div>
+          <div className="space-y-3 text-warning">
+            <p className="font-semibold">Confirm delete</p>
+            <p className="max-w-sm text-xsm">
+              Are you sure you want to delete this category? This action cannot
+              be undone.
+            </p>
+          </div>
+          <button
+            onClick={handleDeleteCategory}
+            disabled={deleteCategoryMutation.isLoading}
+            className="py-4 text-white rounded-md w-60 bg-warning"
+          >
+            Yes, delete
+          </button>
+          <button
+            onClick={() => setShowDeleteModal(false)}
+            className="hover:underline"
+          >
+            Cancel
+          </button>
+        </section>
       </Modal>
     </>
   )

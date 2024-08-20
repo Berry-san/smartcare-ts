@@ -1,40 +1,90 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Table from '../Components/Table'
 import Button from '../Components/Button'
 import { Link } from 'react-router-dom'
+import { useQuery, useMutation, useQueryClient } from 'react-query'
 import { apiService } from 'middleware/ApiServices'
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+// import { Article } from './Article'
+
+export interface Article {
+  id: number
+  title: string
+  DESCRIPTION: string
+  imageUrl: string
+  inserted_dt: string
+}
 
 const Articles = () => {
   const [search, setSearch] = useState('')
-  const [articles, setArticles] = useState<any[]>([])
-  const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false)
+  const [articleToEdit, setArticleToEdit] = useState<Article | null>(null)
+  const queryClient = useQueryClient()
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const articles = await apiService.listArticles()
-        setArticles(articles)
-      } catch (error) {
-        setError('Failed to load categories')
-        console.error(error)
-      }
+  const {
+    data: articles = [],
+    error,
+    isLoading,
+  } = useQuery<Article[]>('articles', apiService.listArticles)
+
+  const deleteArticleMutation = useMutation(
+    (id: string) => apiService.deleteArticle(id),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('articles')
+        toast.success('Article deleted successfully')
+        setShowDeleteModal(false)
+      },
+      onError: () => {
+        toast.error('Failed to delete article')
+      },
     }
+  )
 
-    fetchCategories()
-  }, [])
+  const updateArticleMutation = useMutation(
+    (article: Article) => apiService.updateArticle(article),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('articles')
+        toast.success('Article updated successfully')
+        setShowEditModal(false)
+      },
+      onError: () => {
+        toast.error('Failed to update article')
+      },
+    }
+  )
+
+  const handleDeleteArticle = (id: string) => {
+    deleteArticleMutation.mutate(id)
+  }
+
+  const handleEditArticle = (article: Article) => {
+    updateArticleMutation.mutate(article)
+    setArticleToEdit(article)
+    setShowEditModal(true)
+  }
+
+  const filteredData =
+    articles.filter((article) =>
+      article.title.toLowerCase().includes(search.toLowerCase())
+    ) || []
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchValue = e.target.value.toLowerCase()
     setSearch(searchValue)
-    // const filtered = sortedData.filter(
-    //   (item) =>
-    //     // item.firstName.toLowerCase().includes(searchValue) ||
-    //     item.document_owner.toLowerCase().includes(searchValue) ||
-    //     item.department.toLowerCase().includes(searchValue)
-    // )
-    // setFilteredData(filtered)
   }
+
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
+  if (error) {
+    return <div>Failed to load articles</div>
+  }
+
   return (
     <div>
       <h2 className="text-2xl font-bold">Articles</h2>
@@ -60,7 +110,15 @@ const Articles = () => {
         </Link>
       </div>
       <div className="mt-10">
-        <Table data={articles} />
+        <Table
+          data={filteredData}
+          handleDelete={handleDeleteArticle}
+          handleEdit={handleEditArticle} // Pass handleEditArticle function here
+          deleteModal={showDeleteModal}
+          deleteModalFunction={setShowDeleteModal}
+          editModal={showEditModal}
+          editModalFunction={setShowEditModal}
+        />
       </div>
     </div>
   )

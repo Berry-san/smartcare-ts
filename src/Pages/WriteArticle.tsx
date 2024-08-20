@@ -2,14 +2,23 @@ import { useState } from 'react'
 import back from '../assets/back.svg'
 import Editor from 'Components/Editor'
 import Button from 'Components/Button'
+import { useNavigate } from 'react-router'
 
 const WriteArticle = () => {
   const [article, setArticle] = useState('')
-  console.log(article)
+
+  const navigate = useNavigate()
+  const goBack = () => {
+    navigate(-1)
+  }
+
   return (
     <div className="space-y-8">
       <div className="flex space-x-5">
-        <img src={back} alt="" />
+        <button onClick={goBack}>
+          <img src={back} alt="" />
+        </button>
+
         <p className="text-xl font-bold">Write an Article</p>
       </div>
       <div className="space-y-10">
