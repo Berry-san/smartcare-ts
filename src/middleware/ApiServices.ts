@@ -207,6 +207,40 @@ const apiClient = axios.create({
 })
 
 export const apiService = {
+  uploadVideoToCloudinary: async (file: File) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('upload_preset', 'Video_Upload_Preset')
+    formData.append('cloud_name', 'dkiyhlnyw')
+    console.log(formData)
+
+    const response = await axios.post(
+      `https://api.cloudinary.com/v1_1/dkiyhlnyw/video/upload`,
+      formData
+    )
+    console.log(response.data.secure_url)
+    console.log(response)
+    return response.data.secure_url // The URL of the uploaded video
+  },
+
+  deleteVideoFromCloudinary: async (publicId: string) => {
+    const url = `https://api.cloudinary.com/v1_1/dkiyhlnyw/resources/video/upload?public_ids=${publicId}`
+
+    const response = await axios.delete(url, {
+      auth: {
+        username: '918831619251733', // Cloudinary API Key
+        password: 'Fs5NE6DoKEHaF3GMsYZoNElQ5G0', // Cloudinary API Secret
+      },
+    })
+    console.log(response)
+
+    if (response.status !== 200) {
+      throw new Error('Failed to delete video from Cloudinary')
+    }
+
+    return response.data
+  },
+
   // Categories
   listCategories: async () => {
     const response = await apiClient.get('/list_category')
@@ -236,12 +270,19 @@ export const apiService = {
   // Videos
   listVideos: async () => {
     const response = await apiClient.get('/list_videos')
-    return videosSchema.parse(response.data.result)
+    // return videosSchema.parse(response.data.result)
+    return response.data.result
   },
 
-  createVideo: async (data: { title: string; youtubeUrl: string }) => {
+  createVideo: async (data: {
+    title: string
+    youtubeUrl: string
+    description: string
+    categoryId: string
+  }) => {
     const response = await apiClient.post('/create_video', data)
-    return videoSchema.parse(response.data)
+    // return videoSchema.parse(response.data)
+    return response.data
   },
 
   updateVideo: async (data: {
@@ -256,7 +297,7 @@ export const apiService = {
   },
 
   deleteVideo: async (videoId: string) => {
-    const response = await apiClient.delete(`/delete_video?videoId=${videoId}`)
+    const response = await apiClient.get(`/delete_video?videoId=${videoId}`)
     return response.data
   },
 

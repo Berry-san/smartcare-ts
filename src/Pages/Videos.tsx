@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
 import { apiService } from 'middleware/ApiServices'
 import VideoThumbnail from '../Components/VideoThumbnail'
@@ -8,6 +8,7 @@ import addButton from '../assets/add.svg'
 import deleteButton from '../assets/delete.svg'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import UploadVideo from 'Components/UploadVideo'
 
 interface Category {
   category_id: string
@@ -15,23 +16,32 @@ interface Category {
 }
 
 interface Video {
-  id: string
+  video_id: string
+  categoryId: string
+  youtube_url: string
   title: string
-  // Add other properties here
+  description: string
 }
 
 const Videos: React.FC = () => {
   const [search, setSearch] = useState('')
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [categoryToDelete, setCategoryToDelete] = useState<string | null>(null)
+  const [videoToDelete, setVideoToDelete] = useState<Video | null>(null)
   const [newCategory, setNewCategory] = useState('')
   const [isAddingCategory, setIsAddingCategory] = useState(false)
+  const [showUploadModal, setShowUploadModal] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const queryClient = useQueryClient()
 
   const { data: categories = [], error: fetchError } = useQuery<Category[]>(
     'categories',
     apiService.listCategories
+  )
+
+  const { data: videos = [], error: fetchVideoError } = useQuery<Video[]>(
+    'videos',
+    apiService.listVideos
   )
 
   const deleteCategoryMutation = useMutation(
@@ -83,8 +93,50 @@ const Videos: React.FC = () => {
 
   const handleAddButtonClick = () => {
     setIsAddingCategory(true)
-    if (inputRef.current) {
+  }
+
+  useEffect(() => {
+    if (isAddingCategory && inputRef.current) {
       inputRef.current.focus()
+    }
+  }, [isAddingCategory])
+
+  const deleteVideoMutation = useMutation(
+    async (video: Video) => {
+      if (!video.youtube_url) throw new Error('No video URL found')
+
+      // Determine if the URL is a YouTube link or a Cloudinary link
+      const isYouTubeUrl =
+        video.youtube_url.includes('youtube.com') ||
+        video.youtube_url.includes('youtu.be')
+
+      if (!isYouTubeUrl) {
+        // If it's not a YouTube URL, it's a Cloudinary URL, so delete from Cloudinary
+        const publicId = video.youtube_url.split('/').pop()?.split('.')[0]
+
+        if (publicId) {
+          await apiService.deleteVideoFromCloudinary(publicId)
+        }
+      }
+
+      // Regardless of the type, delete the video record from your backend
+      return apiService.deleteVideo(video.video_id)
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('videos')
+        toast.success('Video deleted successfully')
+        setVideoToDelete(null) // Close the delete modal
+      },
+      onError: () => {
+        toast.error('Failed to delete video')
+      },
+    }
+  )
+
+  const handleDeleteVideo = () => {
+    if (videoToDelete) {
+      deleteVideoMutation.mutate(videoToDelete)
     }
   }
 
@@ -94,6 +146,10 @@ const Videos: React.FC = () => {
 
   if (fetchError) {
     return <div>Failed to load categories</div>
+  }
+
+  if (fetchVideoError) {
+    return <div>Failed to load videos</div>
   }
 
   return (
@@ -117,21 +173,38 @@ const Videos: React.FC = () => {
           </div>
         </div>
         <div>
-          {/* <Button text={'Upload a video'} onClick={() => setShowModal(true)} /> */}
+          <Button
+            text={'Upload a video'}
+            onClick={() => setShowUploadModal(true)}
+          />
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-5 mt-10 md:grid-cols-2 lg:grid-cols-3">
         <section className="order-2 col-span-1 lg:col-span-2 md:order-1">
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-            <VideoThumbnail url="https://www.youtube.com/watch?v=5SUqLHydmhg" />
-            <VideoThumbnail url="https://www.youtube.com/watch?v=5SUqLHydmhg" />
+            {videos.map((video) => (
+              <div key={video.video_id} className="relative group">
+                <VideoThumbnail url={video.youtube_url} title={video.title} />
+
+                <button
+                  onClick={() => setVideoToDelete(video)}
+                  className="absolute p-2 transition-opacity bg-red-600 rounded-full opacity-0 top-2 right-2 group-hover:opacity-100"
+                >
+                  <img
+                    src={deleteButton}
+                    alt="Delete Video"
+                    className="w-6 h-6"
+                  />
+                </button>
+              </div>
+            ))}
           </div>
         </section>
         <section className="order-1 col-span-1 md:order-2">
           <div className="font-medium bg-white rounded-xl">
             <div className="flex items-center justify-between p-5 border-b border-b-gray">
-              <p>Video Categories</p>
+              <p>Video Categories ({categories.length})</p>
               <button onClick={handleAddButtonClick}>
                 <img src={addButton} alt="Add Category" />
               </button>
@@ -186,6 +259,48 @@ const Videos: React.FC = () => {
           </div>
         </section>
       </div>
+
+      {/* Render the UploadVideo component conditionally */}
+      {showUploadModal && (
+        <UploadVideo
+          isVisible={showUploadModal}
+          onClose={() => setShowUploadModal(false)}
+          categories={categories}
+        />
+      )}
+
+      {videoToDelete && (
+        <Modal
+          isVisible={Boolean(videoToDelete)}
+          onClose={() => setVideoToDelete(null)}
+        >
+          <section className="flex flex-col items-center justify-center space-y-5 text-center">
+            <div className="p-5 bg-red-100 rounded-full">
+              <img src={deleteButton} className="w-8 h-8" alt="Delete" />
+            </div>
+            <div className="space-y-3 text-warning">
+              <p className="font-semibold">Confirm delete</p>
+              <p className="max-w-sm text-xsm">
+                Are you sure you want to delete this video? This action cannot
+                be undone.
+              </p>
+            </div>
+            <button
+              onClick={handleDeleteVideo}
+              disabled={deleteVideoMutation.isLoading}
+              className="py-4 text-white rounded-md w-60 bg-warning"
+            >
+              Yes, delete
+            </button>
+            <button
+              onClick={() => setVideoToDelete(null)}
+              className="hover:underline"
+            >
+              Cancel
+            </button>
+          </section>
+        </Modal>
+      )}
 
       <Modal
         isVisible={showDeleteModal}

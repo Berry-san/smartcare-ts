@@ -22,8 +22,8 @@ const Layout: React.FC = () => {
       <Topbar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       <div className="flex w-full pt-16">
         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-        <main className="relative flex-1 h-screen overflow-x-hidden overflow-y-auto bg-primary">
-          <div className="relative px-4 pt-3 pb-24 mx-auto max-w-screen-2xl shadow-2 md:px-6 2xl:px-11 lg:pt-5">
+        <main className="flex-1 h-screen overflow-x-hidden overflow-y-auto bg-primary">
+          <div className="px-4 pt-5 pb-24 mx-auto max-w-screen-2xl shadow-2 md:px-6 2xl:px-11 lg:pt-10">
             <Outlet />
           </div>
         </main>

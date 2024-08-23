@@ -19,7 +19,7 @@ const Dashboard = () => {
   console.log(user)
   const [showModal, setShowModal] = useState(false)
   return (
-    <div className="h-screen">
+    <div className="">
       <span>
         <Greeting />
       </span>
@@ -44,7 +44,7 @@ const Dashboard = () => {
       <section className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         {/* Comments */}
         <div className="order-2 lg:order-1">
-          <div className="flex justify-between text-md font-medium">
+          <div className="flex justify-between font-medium text-md">
             <p className="">Recent comments</p>
             <Link to="/comments" className="underline text-secondary">
               View all comments
@@ -135,7 +135,7 @@ const Dashboard = () => {
         </div>
         {/* Create Video  */}
         <div className="order-1 px-4 py-6 border rounded-lg border-border_color bg-gray/15 h-36 lg:order-2">
-          <h2 className="text-md font-medium">Content Creator:</h2>
+          <h2 className="font-medium text-md">Content Creator:</h2>
           <div className="grid grid-cols-2 gap-5 mt-2 text-white">
             <button
               className="py-4 rounded bg-secondary"
@@ -145,7 +145,7 @@ const Dashboard = () => {
             </button>
             <Link
               to="/write-article"
-              className=" flex justify-center py-4 rounded bg-secondary"
+              className="flex justify-center py-4 rounded bg-secondary"
             >
               Write an article
             </Link>

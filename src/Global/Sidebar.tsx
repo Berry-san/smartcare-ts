@@ -108,7 +108,7 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
 
         <div className="flex flex-col flex-1 overflow-y-auto duration-300 ease-linear">
           {/* Sidebar Menu */}
-          <nav className="py-10 lg:px-10">
+          <nav className="py-8 lg:px-10">
             {/* Menu Group */}
             <div>
               <ul className="flex flex-col gap-2 mb-6 space-y-5">

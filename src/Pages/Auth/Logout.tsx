@@ -18,7 +18,7 @@ const Logout = () => {
       className="flex items-center justify-end space-x-3 font-mono font-medium text-warning"
     >
       <p className="hidden md:flex">Sign Out</p>
-      <img src={logoutIcon} alt="Logout" />
+      <img src={logoutIcon} className="w-7 h-7" alt="Logout" />
     </button>
   )
 }

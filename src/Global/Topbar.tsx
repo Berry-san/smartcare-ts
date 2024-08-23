@@ -1,6 +1,5 @@
 import Logout from 'Pages/Auth/Logout'
 import hamburger from '../assets/hamburger.svg'
-import logout from '../assets/logout.svg'
 
 interface TopbarProps {
   sidebarOpen: boolean
@@ -10,7 +9,7 @@ interface TopbarProps {
 const Topbar: React.FC<TopbarProps> = ({ sidebarOpen, setSidebarOpen }) => {
   return (
     <header className="fixed top-0 z-30 flex w-full bg-white border-b border-border_color drop-shadow-2">
-      <div className="flex items-center justify-between flex-grow px-1 lg:justify-end lg:h-16 shadow-2 md:px-6 2xl:px-11">
+      <div className="flex items-center justify-between flex-grow px-3 md:px-6 py-2.5 lg:justify-end lg:h-16 shadow-2 2xl:px-11">
         <div className="flex items-center gap-2 sm:gap-4 lg:hidden">
           <button
             aria-controls="sidebar"
