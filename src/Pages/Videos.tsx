@@ -103,24 +103,7 @@ const Videos: React.FC = () => {
 
   const deleteVideoMutation = useMutation(
     async (video: Video) => {
-      if (!video.youtube_url) throw new Error('No video URL found')
-
-      // Determine if the URL is a YouTube link or a Cloudinary link
-      const isYouTubeUrl =
-        video.youtube_url.includes('youtube.com') ||
-        video.youtube_url.includes('youtu.be')
-
-      if (!isYouTubeUrl) {
-        // If it's not a YouTube URL, it's a Cloudinary URL, so delete from Cloudinary
-        const publicId = video.youtube_url.split('/').pop()?.split('.')[0]
-
-        if (publicId) {
-          await apiService.deleteVideoFromCloudinary(publicId)
-        }
-      }
-
-      // Regardless of the type, delete the video record from your backend
-      return apiService.deleteVideo(video.video_id)
+      apiService.deleteVideo(video.video_id)
     },
     {
       onSuccess: () => {

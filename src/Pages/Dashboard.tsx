@@ -5,6 +5,9 @@ import { Link } from 'react-router-dom'
 import Modal from 'Components/Modal'
 import { useState } from 'react'
 import useAuthStore from 'Store/authStore'
+import UploadVideo from 'Components/UploadVideo'
+import { useQuery, useMutation, useQueryClient } from 'react-query'
+import { apiService } from 'middleware/ApiServices'
 
 const DashboardItems = [
   { id: 1, totalUsers: 'Total users', randomNumber: 400 },
@@ -12,12 +15,23 @@ const DashboardItems = [
   { id: 3, totalUsers: 'Charlie', randomNumber: 56 },
   { id: 4, totalUsers: 'David', randomNumber: 40 },
 ]
+interface Category {
+  category_id: string
+  category_name: string
+}
 const Dashboard = () => {
   const { user } = useAuthStore((state) => ({
     user: state.user,
   }))
   console.log(user)
   const [showModal, setShowModal] = useState(false)
+  const [showUploadModal, setShowUploadModal] = useState(false)
+
+  const { data: categories = [], error: fetchError } = useQuery<Category[]>(
+    'categories',
+    apiService.listCategories
+  )
+
   return (
     <div className="">
       <span>
@@ -30,7 +44,7 @@ const Dashboard = () => {
             key={index}
           >
             <div className="flex items-center justify-between">
-              <div className="font-semibold text-blue">
+              <div className="font-semibold text-bluish">
                 <p className="text-2xl">{item.randomNumber} </p>
                 <p className="text-lg">{item.totalUsers}</p>
               </div>
@@ -139,7 +153,7 @@ const Dashboard = () => {
           <div className="grid grid-cols-2 gap-5 mt-2 text-white">
             <button
               className="py-4 rounded bg-secondary"
-              onClick={() => setShowModal(true)}
+              onClick={() => setShowUploadModal(true)}
             >
               Upload a Video
             </button>
@@ -155,6 +169,13 @@ const Dashboard = () => {
       <Modal isVisible={showModal} onClose={() => setShowModal(false)}>
         <div>Hello</div>
       </Modal>
+      {showUploadModal && (
+        <UploadVideo
+          isVisible={showUploadModal}
+          onClose={() => setShowUploadModal(false)}
+          categories={categories}
+        />
+      )}
     </div>
   )
 }

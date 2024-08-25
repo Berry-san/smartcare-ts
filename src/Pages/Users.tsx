@@ -1,42 +1,37 @@
 import { useState } from 'react'
 import UserCard from '../Components/User-Card'
+import { apiService } from 'middleware/ApiServices'
+import { useQuery } from 'react-query'
+
+interface User {
+  firstname: string
+  lastname: string
+  user_id: string
+  email: string
+  inserted_dt: string
+}
 
 const Users = () => {
   const [search, setSearch] = useState('')
 
-  // Sample user data (replace this with your actual data)
-  const users = [
-    {
-      name: 'Ayo Maff',
-      date: '22/09/2000',
-      document_owner: 'Ayo Maff',
-      department: 'Engineering',
-    },
-    {
-      name: 'Jane Doe',
-      date: '15/07/1999',
-      document_owner: 'Jane Doe',
-      department: 'Marketing',
-    },
-    {
-      name: 'John Smith',
-      date: '30/11/1985',
-      document_owner: 'John Smith',
-      department: 'Sales',
-    },
-    // Add more users as needed
-  ]
+  const { data: users = [], error: fetchError } = useQuery<User[]>(
+    'users',
+    apiService.listUsers
+  )
 
-  // Filter the users based on the search input
   const filteredUsers = users.filter(
     (user) =>
-      user.document_owner.toLowerCase().includes(search) ||
-      user.name.toLowerCase().includes(search)
+      user.firstname.toLowerCase().includes(search) ||
+      user.lastname.toLowerCase().includes(search)
   )
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchValue = e.target.value.toLowerCase()
     setSearch(searchValue)
+  }
+
+  if (fetchError) {
+    return <div>Failed to load users</div>
   }
 
   return (
@@ -60,7 +55,14 @@ const Users = () => {
       {/* User Cards */}
       <div className="grid grid-cols-1 gap-10 mt-10 md:grid-cols-2 lg:grid-cols-4">
         {filteredUsers.map((user, index) => (
-          <UserCard key={index} name={user.name} date={user.date} />
+          <UserCard
+            key={index}
+            firstname={user.firstname}
+            lastname={user.lastname}
+            date={user.inserted_dt}
+            user_id={user.user_id}
+            email={user.email}
+          />
         ))}
       </div>
     </div>

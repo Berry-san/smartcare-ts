@@ -267,6 +267,18 @@ export const apiService = {
     return response.data
   },
 
+  // Fetch list of users
+  listUsers: async () => {
+    const response = await apiClient.get('/list_users')
+    return response.data.result
+  },
+
+  // Fetch a single user by ID
+  getSingleUser: async (userId: string) => {
+    const response = await apiClient.get(`/single_user/${userId}`)
+    return response.data.result
+  },
+
   // Videos
   listVideos: async () => {
     const response = await apiClient.get('/list_videos')

@@ -9,7 +9,7 @@ import Editor from './Editor'
 interface TableRowData {
   id: number
   title: string
-  DESCRIPTION: string
+  description: string
   imageUrl: string
   inserted_dt: string
   likes?: number
@@ -40,7 +40,7 @@ const Table: React.FC<TableProps> = ({
     setSelectedArticle({
       id: parseInt(articleId),
       title: '',
-      DESCRIPTION: '',
+      description: '',
       imageUrl: '',
       inserted_dt: '',
     })
@@ -158,6 +158,7 @@ const Table: React.FC<TableProps> = ({
             <form
               onSubmit={(e) => {
                 e.preventDefault()
+                console.log(selectedArticle)
                 if (selectedArticle) {
                   handleEdit(selectedArticle)
                   editModalFunction(false)
@@ -195,11 +196,11 @@ const Table: React.FC<TableProps> = ({
                 <Editor
                   placeholder="Write anything you want."
                   id="description"
-                  value={selectedArticle.DESCRIPTION}
+                  value={selectedArticle.description}
                   onChange={(value) =>
                     setSelectedArticle({
                       ...selectedArticle,
-                      DESCRIPTION: value,
+                      description: value,
                     })
                   }
                   // onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
@@ -230,7 +231,7 @@ const Table: React.FC<TableProps> = ({
                       handleEdit(selectedArticle)
                     }
                   }}
-                  className="px-4 py-2 text-white bg-blue-600 rounded-md"
+                  className="px-4 py-2 text-white rounded-md bg-secondary"
                 >
                   Save
                 </button>

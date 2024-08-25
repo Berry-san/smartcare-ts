@@ -11,7 +11,7 @@ import 'react-toastify/dist/ReactToastify.css'
 export interface Article {
   id: number
   title: string
-  DESCRIPTION: string
+  description: string
   imageUrl: string
   inserted_dt: string
 }
