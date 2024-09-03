@@ -27,33 +27,24 @@ const Login: React.FC = () => {
       emailAddress: '',
       password: '',
     },
-    // validationSchema: Yup.object({
-    //   email: Yup.string().email('Invalid email address').required('Required'),
-    //   password: Yup.string()
-    //     .min(8, 'Password must be 8 characters long')
-    //     .matches(/[0-9]/, 'Password requires a number')
-    //     .matches(/[a-z]/, 'Password requires a lowercase letter')
-    //     .matches(/[A-Z]/, 'Password requires an uppercase letter')
-    //     .matches(/[^\w]/, 'Password requires a symbol')
-    //     .required('Required'),
-    // }),
+
     onSubmit: async () => {
       setLoading(true)
       setError(null)
 
       try {
         const response = await apiService.userLogin(loginValue.values)
+        console.log(response)
 
-        if (response.statusCode === '200') {
-          const loginUser = response.result
-          const { emailAddress, firstName, lastName, userId } = loginUser
+        if (response.status_code === '0') {
+          const loginUser = response.user_detail
+          const { email_address, firstname, lastname } = loginUser
 
           login({
-            emailAddress,
-            firstName,
-            lastName,
-            isAuthenticated: +response.statusCode === 200,
-            userId,
+            email_address,
+            firstname,
+            lastname,
+            isAuthenticated: +response.status_code === 0,
           })
           toast.success(response.message)
           navigate('/')
@@ -177,16 +168,16 @@ const Login: React.FC = () => {
                   >
                     Login
                   </button>
-                  <div>
+                  {/* <div>
                     <h2 className="mt-2 text-sm font-semibold text-gray-600 ">
                       Don't have an account?{' '}
                       <Link to="/signUp" className="underline text-secondary">
                         Sign Up
                       </Link>
                     </h2>
-                  </div>
+                  </div> */}
                   <Link
-                    to="/forgotPassword"
+                    to="/resetPassword"
                     className="text-sm font-semibold underline"
                   >
                     Forgot Password ?

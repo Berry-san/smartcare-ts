@@ -10,6 +10,7 @@ interface TableRowData {
   id: number
   title: string
   description: string
+  image_url?: string
   imageUrl: string
   inserted_dt: string
   likes?: number
@@ -191,6 +192,28 @@ const Table: React.FC<TableProps> = ({
                   htmlFor="title"
                   className="block text-sm font-medium text-gray-700"
                 >
+                  Image
+                </label>
+                <input
+                  type="text"
+                  id="title"
+                  value={selectedArticle.image_url}
+                  onChange={(e) =>
+                    setSelectedArticle({
+                      ...selectedArticle,
+                      imageUrl: e.target.value,
+                      image_url: e.target.value,
+                    })
+                  }
+                  className="px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm w-96 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                  required
+                />
+              </div>
+              <div className="mt-4">
+                <label
+                  htmlFor="description"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Description
                 </label>
                 <Editor
@@ -203,25 +226,7 @@ const Table: React.FC<TableProps> = ({
                       description: value,
                     })
                   }
-                  // onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                  //   setSelectedArticle({
-                  //     ...selectedArticle,
-                  //     DESCRIPTION: e.target.value,
-                  //   })
-                  // }
                 />
-                {/* <textarea
-                  id="DESCRIPTION"
-                  value={selectedArticle.DESCRIPTION}
-                  onChange={(e) =>
-                    setSelectedArticle({
-                      ...selectedArticle,
-                      DESCRIPTION: e.target.value,
-                    })
-                  }
-                  className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                  required
-                /> */}
               </div>
               <div className="flex justify-end mt-4 space-x-4">
                 <button

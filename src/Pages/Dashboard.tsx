@@ -6,31 +6,59 @@ import Modal from 'Components/Modal'
 import { useState } from 'react'
 import useAuthStore from 'Store/authStore'
 import UploadVideo from 'Components/UploadVideo'
-import { useQuery, useMutation, useQueryClient } from 'react-query'
+import { useQuery } from 'react-query'
 import { apiService } from 'middleware/ApiServices'
 
-const DashboardItems = [
-  { id: 1, totalUsers: 'Total users', randomNumber: 400 },
-  { id: 2, totalUsers: 'Bob', randomNumber: 70 },
-  { id: 3, totalUsers: 'Charlie', randomNumber: 56 },
-  { id: 4, totalUsers: 'David', randomNumber: 40 },
-]
 interface Category {
   category_id: string
   category_name: string
+}
+
+interface Summary {
+  noOfUsers: string
+  noOfArticles: string
+  noOfVideos: string
+  noOfVideoCategories: string
 }
 const Dashboard = () => {
   const { user } = useAuthStore((state) => ({
     user: state.user,
   }))
-  console.log(user)
+
   const [showModal, setShowModal] = useState(false)
   const [showUploadModal, setShowUploadModal] = useState(false)
 
-  const { data: categories = [], error: fetchError } = useQuery<Category[]>(
-    'categories',
-    apiService.listCategories
+  const { data: categories = [], error: fetchCategoriesError } = useQuery<
+    Category[]
+  >('categories', apiService.listCategories)
+
+  const { data: adminSummary, error: fetchError } = useQuery<Summary>(
+    'Summary',
+    apiService.listSummary
   )
+
+  const DashboardItems = [
+    {
+      id: 1,
+      totalUsers: 'Total users',
+      randomNumber: adminSummary?.noOfUsers || 0,
+    },
+    {
+      id: 2,
+      totalUsers: 'Total Video Categories',
+      randomNumber: adminSummary?.noOfVideoCategories || 0,
+    },
+    {
+      id: 3,
+      totalUsers: 'Total Videos',
+      randomNumber: adminSummary?.noOfVideos || 0,
+    },
+    {
+      id: 4,
+      totalUsers: 'Total Articles',
+      randomNumber: adminSummary?.noOfArticles || 0,
+    },
+  ]
 
   return (
     <div className="">
@@ -40,13 +68,13 @@ const Dashboard = () => {
       <section className="grid grid-cols-1 gap-5 my-5 md:grid-cols-2 lg:grid-cols-4">
         {DashboardItems.map((item, index) => (
           <div
-            className="h-32 px-8 pt-8 font-mono border border-border_color rounded-xl bg-gray/15"
+            className="h-32 px-5 pt-8 font-mono border border-border_color rounded-xl bg-gray/15"
             key={index}
           >
             <div className="flex items-center justify-between">
               <div className="font-semibold text-bluish">
                 <p className="text-2xl">{item.randomNumber} </p>
-                <p className="text-lg">{item.totalUsers}</p>
+                <p className="text-base">{item.totalUsers}</p>
               </div>
               <div>
                 <img src={users} className="w-7 h-7" alt="" />

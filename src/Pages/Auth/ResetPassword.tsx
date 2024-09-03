@@ -5,9 +5,9 @@ import 'react-toastify/dist/ReactToastify.css'
 import { useFormik } from 'formik'
 import { apiService } from 'middleware/ApiServices'
 interface ResetPasswordValues {
-  token: string
-  newPassword: string
-  confirmPassword: string
+  emailAddress: string
+  old_password: string
+  new_password: string
 }
 
 const ResetPassword: React.FC = () => {
@@ -23,9 +23,9 @@ const ResetPassword: React.FC = () => {
 
   const resetPasswordValue = useFormik<ResetPasswordValues>({
     initialValues: {
-      token: '',
-      newPassword: '',
-      confirmPassword: '',
+      emailAddress: '',
+      new_password: '',
+      old_password: '',
     },
 
     onSubmit: async () => {
@@ -33,14 +33,15 @@ const ResetPassword: React.FC = () => {
       setError(null)
 
       try {
-        const response = await apiService.resetPassword(
+        const response = await apiService.changePassword(
           resetPasswordValue.values
         )
 
         if (response.statusCode === '200') {
           navigate('/login')
+          toast.success(response.message)
         } else {
-          toast.error(response.data.message)
+          toast.error(response.message)
         }
         setLoading(false)
       } catch (error: any) {
@@ -59,28 +60,28 @@ const ResetPassword: React.FC = () => {
         <div className="bg-[#fff] border border-dull_white max-w-xl mx-auto rounded-md">
           <div className="px-10 py-6">
             <div className="flex items-center justify-between mb-5 ">
-              <h4 className="text-sm font-semibold">Login</h4>
+              <h4 className="text-sm font-semibold">Change Password</h4>
             </div>
             <div>
               <form onSubmit={resetPasswordValue.handleSubmit}>
                 <div className="flex flex-col text-left gap-x-5 gap-y-5 ">
                   <div>
                     <label htmlFor="email" className="text-xs font-semibold">
-                      Token:
+                      Email Address:
                     </label>
                     <input
                       type="text"
                       className="w-full bg-[#f4f4f4] px-5 py-3 focus:outline-none rounded-md"
-                      id="token"
-                      name="token"
-                      value={resetPasswordValue.values.token}
+                      id="emailAddress"
+                      name="emailAddress"
+                      value={resetPasswordValue.values.emailAddress}
                       onChange={resetPasswordValue.handleChange}
                       onBlur={resetPasswordValue.handleBlur}
                     />
-                    {resetPasswordValue.touched.token &&
-                    resetPasswordValue.errors.token ? (
+                    {resetPasswordValue.touched.emailAddress &&
+                    resetPasswordValue.errors.emailAddress ? (
                       <p className="mt-1 text-xs font-medium text-red-500">
-                        {resetPasswordValue.errors.token}
+                        {resetPasswordValue.errors.emailAddress}
                       </p>
                     ) : null}
                   </div>
@@ -92,9 +93,9 @@ const ResetPassword: React.FC = () => {
                       <input
                         type={showPassword ? 'text' : 'password'}
                         className="w-full bg-[#f4f4f4] px-5 py-3 focus:outline-none rounded-md"
-                        id="newPassword"
-                        name="newPassword"
-                        value={resetPasswordValue.values.newPassword}
+                        id="new_password"
+                        name="new_password"
+                        value={resetPasswordValue.values.new_password}
                         onChange={resetPasswordValue.handleChange}
                         onBlur={resetPasswordValue.handleBlur}
                       />
@@ -140,10 +141,10 @@ const ResetPassword: React.FC = () => {
                           </svg>
                         )}
                       </button>
-                      {resetPasswordValue.touched.newPassword &&
-                      resetPasswordValue.errors.newPassword ? (
+                      {resetPasswordValue.touched.new_password &&
+                      resetPasswordValue.errors.new_password ? (
                         <p className="mt-1 text-xs font-medium text-red-500">
-                          {resetPasswordValue.errors.newPassword}
+                          {resetPasswordValue.errors.new_password}
                         </p>
                       ) : null}
                     </div>
@@ -156,9 +157,9 @@ const ResetPassword: React.FC = () => {
                       <input
                         type={showPassword ? 'text' : 'password'}
                         className="w-full bg-[#f4f4f4] px-5 py-3 focus:outline-none rounded-md"
-                        id="confirmPassword"
-                        name="confirmPassword"
-                        value={resetPasswordValue.values.confirmPassword}
+                        id="old_password"
+                        name="old_password"
+                        value={resetPasswordValue.values.old_password}
                         onChange={resetPasswordValue.handleChange}
                         onBlur={resetPasswordValue.handleBlur}
                       />
@@ -204,10 +205,10 @@ const ResetPassword: React.FC = () => {
                           </svg>
                         )}
                       </button>
-                      {resetPasswordValue.touched.confirmPassword &&
-                      resetPasswordValue.errors.confirmPassword ? (
+                      {resetPasswordValue.touched.old_password &&
+                      resetPasswordValue.errors.old_password ? (
                         <p className="mt-1 text-xs font-medium text-red-500">
-                          {resetPasswordValue.errors.confirmPassword}
+                          {resetPasswordValue.errors.old_password}
                         </p>
                       ) : null}
                     </div>
