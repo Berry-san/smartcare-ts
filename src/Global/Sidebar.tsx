@@ -3,6 +3,8 @@ import { UserSidebarLinks } from '../lib/constants/navigation'
 import { NavLink } from 'react-router-dom'
 import back from '../assets/back.svg'
 import logo from '../assets/logo.svg'
+import smartcareLogo from '../assets/smartcareLogo.svg'
+
 // import other imports as needed
 
 interface SidebarProps {
@@ -92,7 +94,7 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
         {/* SIDEBAR HEADER */}
         <div className="flex items-center justify-between gap-2 pt-5 lg:hidden">
           <div>
-            <img src={logo} alt="" className="" />
+            <img src={smartcareLogo} className="w-12 h-12" alt="" />
           </div>
           <button
             ref={trigger}

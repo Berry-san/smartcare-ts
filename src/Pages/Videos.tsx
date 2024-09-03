@@ -21,6 +21,7 @@ interface Video {
   youtube_url: string
   title: string
   description: string
+  inserted_dt?: string
 }
 
 const Videos: React.FC = () => {
@@ -123,8 +124,13 @@ const Videos: React.FC = () => {
     }
   }
 
+  const filteredData = videos.filter((video) =>
+    video.title.toLowerCase().includes(search)
+  )
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value)
+    const searchValue = e.target.value.toLowerCase()
+    setSearch(searchValue)
   }
 
   if (fetchError) {
@@ -166,9 +172,13 @@ const Videos: React.FC = () => {
       <div className="grid grid-cols-1 gap-5 mt-10 md:grid-cols-2 lg:grid-cols-3">
         <section className="order-2 col-span-1 lg:col-span-2 md:order-1">
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-            {videos.map((video) => (
+            {filteredData.map((video) => (
               <div key={video.video_id} className="relative group">
-                <VideoThumbnail url={video.youtube_url} title={video.title} />
+                <VideoThumbnail
+                  url={video.youtube_url}
+                  title={video.title}
+                  date={video.inserted_dt}
+                />
 
                 <button
                   onClick={() => setVideoToDelete(video)}
@@ -221,7 +231,7 @@ const Videos: React.FC = () => {
                   >
                     <p>
                       {category.category_name}{' '}
-                      <span className="text-gray">(32 Videos)</span>
+                      {/* <span className="text-gray">(32 Videos)</span> */}
                     </p>
                     <button
                       onClick={() => {

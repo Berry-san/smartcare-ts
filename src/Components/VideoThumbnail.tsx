@@ -58,6 +58,8 @@ import React from 'react'
 import youtube from '../assets/youtube.svg'
 // import { ReactComponent as CloudinaryIcon } from '../assets/cloudinary.svg'
 
+interface videoThembnailProps {}
+
 const getYouTubeVideoId = (url: string): string | null => {
   const regExp =
     /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/
@@ -75,10 +77,11 @@ const getCloudinaryThumbnailUrl = (url: string): string => {
     .replace('.mp4', '.jpg')
 }
 
-const VideoThumbnail: React.FC<{ url: string; title: string }> = ({
-  url,
-  title,
-}) => {
+const VideoThumbnail: React.FC<{
+  url: string
+  title: string
+  date: string | undefined
+}> = ({ url, title, date }) => {
   const videoId = getYouTubeVideoId(url)
   const isYouTube = !!videoId
   const thumbnailUrl = isYouTube
@@ -126,7 +129,7 @@ const VideoThumbnail: React.FC<{ url: string; title: string }> = ({
         <section className="flex justify-between px-5 py-3">
           <div className="flex flex-col gap-0">
             <h2 className="font-semibold text-md">{title}</h2>
-            <p className="text-gray">22/22/22</p>
+            <p className="text-gray">{date}</p>
           </div>
         </section>
       </div>
