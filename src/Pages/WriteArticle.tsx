@@ -11,6 +11,7 @@ import Button from 'Components/Button'
 const WriteArticle = () => {
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [title, setTitle] = useState('')
+  const [loading, setLoading] = useState(false)
   const [description, setDescription] = useState('')
   const [imageUrl, setImageUrl] = useState('')
 
@@ -45,14 +46,28 @@ const WriteArticle = () => {
       console.log(data)
       return apiService.createArticle(data)
     },
+    //{
+    // onSuccess: () => {
+    //   queryClient.invalidateQueries('articles')
+    //   toast.success('Article created successfully')
+    //   navigate('/articles') // Assuming you want to navigate to the articles page after success
+    // },
+    // onError: (error: any) => {
+    //   toast.error(error.message || 'Failed to create article')
+    // },
     {
+      onMutate: () => {
+        setLoading(true) // Set loading to true when mutation starts
+      },
       onSuccess: () => {
         queryClient.invalidateQueries('articles')
         toast.success('Article created successfully')
+        setLoading(false) // Set loading to false on success
         navigate('/articles') // Assuming you want to navigate to the articles page after success
       },
       onError: (error: any) => {
         toast.error(error.message || 'Failed to create article')
+        setLoading(false) // Set loading to false on error
       },
     }
   )
@@ -165,7 +180,10 @@ const WriteArticle = () => {
             />
           </div>
           <div>
-            <Button text="Publish" />
+            <Button
+              text={loading ? 'Publishing...' : 'Publish'}
+              disabled={loading}
+            />
           </div>
         </form>
       </div>
