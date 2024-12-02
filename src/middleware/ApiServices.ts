@@ -16,7 +16,6 @@ const imageEndpoint: string | undefined =
 const deleteImageEndpoint: string | undefined =
   process.env.REACT_APP_CLOUDINARY_DELETE_IMAGE_ENDPOINT
 
-// Define Zod schemas for request and response validation
 const categorySchema = z.object({
   category_id: z.string(),
   category_name: z.string(),

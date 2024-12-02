@@ -168,14 +168,6 @@ const Login: React.FC = () => {
                   >
                     Login
                   </button>
-                  {/* <div>
-                    <h2 className="mt-2 text-sm font-semibold text-gray-600 ">
-                      Don't have an account?{' '}
-                      <Link to="/signUp" className="underline text-secondary">
-                        Sign Up
-                      </Link>
-                    </h2>
-                  </div> */}
                   <Link
                     to="/resetPassword"
                     className="text-sm font-semibold underline"

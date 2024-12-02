@@ -19,7 +19,7 @@ const Greeting: React.FC = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setGreeting(getGreeting())
-    }, 1000 * 60) // Update every minute
+    }, 1000 * 60)
 
     return () => clearInterval(interval)
   }, [])
