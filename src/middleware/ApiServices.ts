@@ -134,6 +134,12 @@ export const apiService = {
     return response.data.result
   },
 
+  // Fetch a single user by ID
+  getTransactionRecord: async (date: string, month:string) => {
+    const response = await apiClient.get(`/business_transaction_summary?date=${date}&month=${month}`)
+    return response.data.result.monthly
+  },
+
   // Videos
   listVideos: async () => {
     const response = await apiClient.get('/list_videos')
