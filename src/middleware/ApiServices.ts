@@ -3,8 +3,8 @@ import { z } from 'zod'
 
 const username: string | undefined = process.env.REACT_APP_CLOUDINARY_USERNAME
 const password: string | undefined = process.env.REACT_APP_CLOUDINARY_PASSWORD
-const apiBaseURL: string | undefined = process.env.REACT_APP_API_BASE
-const apiKey: string | undefined = process.env.REACT_APP_X_API_KEY
+const apiBaseURL: string | undefined = 'https://api.sunsmartcare.com/v1/api/'
+const apiKey: string | undefined = '21122023'
 const cloudName: string | undefined =
   process.env.REACT_APP_CLOUDINARY_CLOUD_NAME
 const videoEndpoint: string | undefined =
@@ -121,6 +121,12 @@ export const apiService = {
     const response = await apiClient.get('/list_users')
     return response.data.result
   },
+  // Fetch list of users
+  listBusinesses: async () => {
+    const response = await apiClient.get('/list_all_business')
+    return response.data.result
+  },
+
 
   // Fetch a single user by ID
   getSingleUser: async (userId: string) => {

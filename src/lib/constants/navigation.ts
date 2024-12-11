@@ -36,4 +36,11 @@ export const UserSidebarLinks = [
     activeIcon: activeArticle,
     id: 4,
   },
+  {
+    label: 'Business',
+    href: '/business',
+    icon: article,
+    activeIcon: activeArticle,
+    id: 4,
+  },
 ]

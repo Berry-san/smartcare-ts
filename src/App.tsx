@@ -12,6 +12,7 @@ import SignUp from 'Pages/Auth/SignUp'
 import ResetPassword from 'Pages/Auth/ResetPassword'
 import ForgotPassword from 'Pages/Auth/ForgotPassword'
 import useAuthStore from 'Store/authStore'
+import Business from 'Pages/business'
 
 function App() {
   // const { isAuthenticated } = useSelector((state: RootState) => state.auth)
@@ -33,6 +34,7 @@ function App() {
 
       <Route path="/" element={<Layout />}>
         <Route index element={<Dashboard />} />
+        <Route path="business" element={<Business />} />
         <Route path="users" element={<Users />} />
         <Route path="videos" element={<Videos />} />
         <Route path="comments" element={<AllComments />} />
