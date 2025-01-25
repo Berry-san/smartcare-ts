@@ -11,6 +11,8 @@ import Login from 'Pages/Auth/Login'
 import SignUp from 'Pages/Auth/SignUp'
 import ResetPassword from 'Pages/Auth/ResetPassword'
 import ForgotPassword from 'Pages/Auth/ForgotPassword'
+import PrivacyPolicy from 'Pages/privacypage'
+import TermsAndConditions from 'Pages/terms'
 import useAuthStore from 'Store/authStore'
 import Business from 'Pages/business'
 
@@ -31,6 +33,8 @@ function App() {
       <Route path="/signUp" element={<SignUp />} />
       <Route path="/forgotPassword" element={<ForgotPassword />} />
       <Route path="/resetPassword" element={<ResetPassword />} />
+      <Route path='/termsandcondition' element={<TermsAndConditions/>}/>
+      <Route path='/privacy' element={<PrivacyPolicy/>}/>
 
       <Route path="/" element={<Layout />}>
         <Route index element={<Dashboard />} />
