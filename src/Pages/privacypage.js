@@ -85,7 +85,7 @@ const PrivacyPolicy = () => {
       <address className="not-italic">
         <strong>SmartCare Support Team</strong>
         <br />
-        Email: <a href="mailto:support@smartcareapp.com" className="text-blue-500">support@smartcareapp.com</a>
+        Email: <a href="mailto:support@sunsystems.ng" className="text-blue-500">support@sunsystems.ng</a>
       </address>
     </div>
   );

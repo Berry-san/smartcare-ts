@@ -126,7 +126,7 @@ const TermsAndConditions = () => {
           <p className="mt-4">
             <strong>SmartCare Support Team</strong>
             <br />
-            Email: <a href="mailto:support@smartcareapp.com" className="text-blue-600">support@smartcareapp.com</a>
+            Email: <a href="mailto:support@sunsystems.ng" className="text-blue-600">support@sunsystems.ng</a>
           </p>
         </section>
 
