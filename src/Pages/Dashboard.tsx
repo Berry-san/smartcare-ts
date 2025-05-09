@@ -8,10 +8,10 @@ import useAuthStore from 'Store/authStore'
 import UploadVideo from 'Components/UploadVideo'
 import { useQuery } from 'react-query'
 import { apiService } from 'middleware/ApiServices'
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { format } from "date-fns";
-import axios from "axios";
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
+import { format } from 'date-fns'
+import axios from 'axios'
 interface Category {
   category_id: string
   category_name: string
@@ -22,6 +22,7 @@ interface Summary {
   noOfArticles: string
   noOfVideos: string
   noOfVideoCategories: string
+  noOFBusiness: string
 }
 interface ReportSummary {
   totalDebit: string
@@ -31,7 +32,7 @@ interface ReportSummary {
 }
 
 interface ApiResponse {
-  daily: ReportSummary;
+  daily: ReportSummary
 }
 const Dashboard = () => {
   const { user } = useAuthStore((state) => ({
@@ -39,56 +40,52 @@ const Dashboard = () => {
   }))
 
   const [showModal, setShowModal] = useState(false)
-  const [transactionData, setTransactionData] = useState<ReportSummary | null>(null);
+  const [transactionData, setTransactionData] = useState<ReportSummary | null>(
+    null
+  )
   const [showUploadModal, setShowUploadModal] = useState(false)
-  const [fullDate, setFullDate] = useState<string>("");
-  const [monthYear, setMonthYear] = useState<string>("");
+  const [fullDate, setFullDate] = useState<string>('')
+  const [monthYear, setMonthYear] = useState<string>('')
 
   useEffect(() => {
-    const today = new Date();
-    const formattedFullDate = today.toISOString().split("T")[0]; // YYYY-MM-DD
-    const formattedMonthYear = formattedFullDate.slice(0, 7); // YYYY-MM
+    const today = new Date()
+    const formattedFullDate = today.toISOString().split('T')[0] // YYYY-MM-DD
+    const formattedMonthYear = formattedFullDate.slice(0, 7) // YYYY-MM
 
-    setFullDate(formattedFullDate);
-    setMonthYear(formattedMonthYear);
-  }, []);
+    setFullDate(formattedFullDate)
+    setMonthYear(formattedMonthYear)
+  }, [])
 
   useEffect(() => {
     // Define the query parameters
     const params = {
       date: fullDate,
       month: monthYear,
-    };
+    }
     const headers = {
-      "Content-Type": "application/json", // Example: Content-Type
-      'x-api-key':  '21122023', // Example: Authorization header
-    };
+      'Content-Type': 'application/json', // Example: Content-Type
+      'x-api-key': '21122023', // Example: Authorization header
+    }
 
     // Make the API call
     const fetchTransactionSummary = async () => {
       try {
-       
         const response = await axios.get<ApiResponse>(
-          "https://api.sunsmartcare.com/v1/api/business_transaction_summary",
-          { params,
-            headers,
-           } // Attach query parameters
-        );
+          'https://api.sunsmartcare.com/v1/api/business_transaction_summary',
+          { params, headers } // Attach query parameters
+        )
 
         // Update the state with the data
-        setTransactionData(response.data.daily);
+        setTransactionData(response.data.daily)
       } catch (err) {
-        console.error("Error fetching transaction summary:", err);
-        
+        console.error('Error fetching transaction summary:', err)
       } finally {
-       
       }
-    };
+    }
 
-    fetchTransactionSummary();
-  }, [fullDate,monthYear]);
+    fetchTransactionSummary()
+  }, [fullDate, monthYear])
 
-  
   const { data: categories = [], error: fetchCategoriesError } = useQuery<
     Category[]
   >('categories', apiService.listCategories)
@@ -97,7 +94,7 @@ const Dashboard = () => {
     'Summary',
     apiService.listSummary
   )
-  
+
   const DashboardItems = [
     {
       id: 5,
@@ -114,11 +111,16 @@ const Dashboard = () => {
       totalUsers: 'Total Amount Left',
       randomNumber: transactionData?.totalAmountLeft || 0,
     },
-    
+
     {
       id: 1,
       totalUsers: 'Total users',
       randomNumber: adminSummary?.noOfUsers || 0,
+    },
+    {
+      id: 1,
+      totalUsers: 'Total users',
+      randomNumber: adminSummary?.noOFBusiness || 0,
     },
     {
       id: 2,
@@ -139,21 +141,21 @@ const Dashboard = () => {
 
   return (
     <div className="">
-      <div className=' flex justify-between'>
-      <span>
-        <Greeting />
-      </span>
-      <div>
-      <label htmlFor="date">Select a Date:</label>
-      <input
-        type="date"
-        id="date"
-        value={monthYear}
-        onChange={(e) => setMonthYear(e.target.value)}
-      />
+      <div className="flex justify-between ">
+        <span>
+          <Greeting />
+        </span>
+        <div>
+          <label htmlFor="date">Select a Date:</label>
+          <input
+            type="date"
+            id="date"
+            value={monthYear}
+            onChange={(e) => setMonthYear(e.target.value)}
+          />
+        </div>
       </div>
-      </div>
-      
+
       <section className="grid grid-cols-1 gap-5 my-5 md:grid-cols-2 lg:grid-cols-4">
         {DashboardItems.map((item, index) => (
           <div
