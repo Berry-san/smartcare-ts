@@ -2,7 +2,6 @@ import React, { useRef, useEffect, useState } from 'react'
 import { UserSidebarLinks } from '../lib/constants/navigation'
 import { NavLink } from 'react-router-dom'
 import back from '../assets/back.svg'
-import logo from '../assets/logo.svg'
 import smartcareLogo from '../assets/smartcareLogo.svg'
 
 // import other imports as needed

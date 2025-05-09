@@ -23,6 +23,13 @@ export const UserSidebarLinks = [
     id: 2,
   },
   {
+    label: 'Businesses',
+    href: '/businesses',
+    icon: users,
+    activeIcon: activeUsers,
+    id: 2,
+  },
+  {
     label: 'Videos',
     href: '/videos',
     icon: videos,

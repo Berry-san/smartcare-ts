@@ -4,24 +4,27 @@ import { useQuery } from 'react-query'
 import { Column } from 'Components/UserTable'
 import UserTable from 'Components/UserTable'
 
-interface User {
+interface Business {
   firstname: string
   lastname: string
+  business_name: string
   user_id: string
   email_address: string
   phone_number: string
   inserted_dt: string
+  currentBalance: number
+  contact_person: string
 }
 
-const Users = () => {
+const Businesses = () => {
   const [search, setSearch] = useState('')
 
-  const { data: users = [], error: fetchError } = useQuery<User[]>(
-    'users',
-    apiService.listUsers
+  const { data: businesses = [], error: fetchError } = useQuery<Business[]>(
+    'businesses',
+    apiService.listBusinesses
   )
 
-  const reversedData = [...users].reverse()
+  const reversedData = [...businesses].reverse()
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchValue = e.target.value.toLowerCase()
@@ -31,11 +34,17 @@ const Users = () => {
   const columns: Column[] = [
     { header: 'First Name', key: 'firstname' },
     { header: 'Last Name', key: 'lastname' },
+    { header: 'Business Name', key: 'business_name' },
     { header: 'Email', key: 'email_address' },
     { header: 'Phone Number', key: 'phone_number' },
+    { header: 'Contact Person', key: 'contact_person' },
     {
       header: 'Date of Registration',
       key: 'inserted_dt',
+    },
+    {
+      header: 'Current Balance',
+      key: 'currentBalance',
     },
   ]
 
@@ -52,9 +61,9 @@ const Users = () => {
   return (
     <div>
       <div className="space-y-5">
-        <h2 className="text-2xl font-bold">Users</h2>
+        <h2 className="text-2xl font-bold">Businesses</h2>
         <div className="flex flex-col space-y-3">
-          <label htmlFor="">Search for a user</label>
+          <label htmlFor="">Search for a business</label>
           <input
             type="search"
             name="search"
@@ -67,13 +76,13 @@ const Users = () => {
         </div>
       </div>
 
-      {users.length > 0 ? (
+      {businesses?.length > 0 ? (
         <UserTable columns={columns} data={filteredUsers} />
       ) : (
-        <p className="mt-4 text-center">No user found</p>
+        <p className="mt-4 text-center">No business found</p>
       )}
     </div>
   )
 }
 
-export default Users
+export default Businesses

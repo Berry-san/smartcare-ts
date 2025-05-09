@@ -1,10 +1,10 @@
 import back from '../assets/back.svg'
 import profile from '../assets/images/smartcare.jpeg'
-import { useNavigate } from 'react-router-dom' // Ensure you are importing from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 const AllComments = () => {
   const navigate = useNavigate()
   const handleBackClick = () => {
-    navigate(-1) // Navigate to the previous page
+    navigate(-1)
   }
   return (
     <>
@@ -12,7 +12,7 @@ const AllComments = () => {
         <img
           src={back}
           alt="Back"
-          onClick={handleBackClick} // Attach the click event handler to the back button
+          onClick={handleBackClick}
           className="cursor-pointer"
         />
         <p className="text-xl font-bold">All Comments</p>

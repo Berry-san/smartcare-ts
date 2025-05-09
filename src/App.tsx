@@ -15,6 +15,7 @@ import PrivacyPolicy from 'Pages/privacypage'
 import TermsAndConditions from 'Pages/terms'
 import useAuthStore from 'Store/authStore'
 import Business from 'Pages/business'
+import Businesses from 'Pages/Businesses'
 
 function App() {
   // const { isAuthenticated } = useSelector((state: RootState) => state.auth)
@@ -33,12 +34,13 @@ function App() {
       <Route path="/signUp" element={<SignUp />} />
       <Route path="/forgotPassword" element={<ForgotPassword />} />
       <Route path="/resetPassword" element={<ResetPassword />} />
-      <Route path='/termsandcondition' element={<TermsAndConditions/>}/>
-      <Route path='/privacy' element={<PrivacyPolicy/>}/>
+      <Route path="/termsandcondition" element={<TermsAndConditions />} />
+      <Route path="/privacy" element={<PrivacyPolicy />} />
 
       <Route path="/" element={<Layout />}>
         <Route index element={<Dashboard />} />
         <Route path="business" element={<Business />} />
+        <Route path="businesses" element={<Businesses />} />
         <Route path="users" element={<Users />} />
         <Route path="videos" element={<Videos />} />
         <Route path="comments" element={<AllComments />} />
