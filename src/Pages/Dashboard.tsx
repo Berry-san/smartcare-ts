@@ -119,7 +119,7 @@ const Dashboard = () => {
     },
     {
       id: 1,
-      totalUsers: 'Total users',
+      totalUsers: 'Total Businesses',
       randomNumber: adminSummary?.noOFBusiness || 0,
     },
     {
